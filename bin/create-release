@@ -65,7 +65,7 @@ main() {
     local endpoint="https://api.github.com/repos/$owner/$repo/releases"
     local branch="$(get_branch)"
     local version="$(get_version)"
-    local credentials="$WD/github/.access_token"
+    local credentials="$WD/.github/.access_token"
 
     [[ "$branch" != master ]] && error "Your are not on the master branch mate."
     [[ -f "$credentials" ]] || error "Access Token file does not exist"

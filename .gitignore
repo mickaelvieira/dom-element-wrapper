@@ -1,4 +1,4 @@
 *.map
 node_modules
 yarn.lock
-github/.access_token
+.github/.access_token
