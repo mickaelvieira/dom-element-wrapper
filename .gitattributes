@@ -1,0 +1,7 @@
+.babelrc          export-ignore
+.eslintrc         export-ignore
+jest.json         export-ignore
+spec/             export-ignore
+rollup.config.js  export-ignore
+
+* text=auto
