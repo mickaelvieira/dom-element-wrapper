@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <script src="../dist/element-wrapper.js"></script>
+    <script>
+    window.addEventListener("DOMContentLoaded", function () {
+      const createWrapper = elementWrapper.createWrapper;
+      const element = createWrapper("div")
+        .setAttribute("id", "element-id")
+        .appendWrappers(
+          createWrapper("div").appendWrappers(
+            createWrapper("p").appendTextNode("Lorem ipsum")
+          ),
+          createWrapper("ul").appendWrappers(
+            createWrapper("li").appendTextNode("item 1"),
+            createWrapper("li").appendTextNode("item 2"),
+            createWrapper("li").appendTextNode("item 3"),
+            createWrapper("li").appendTextNode("item 4"),
+            createWrapper("li").appendTextNode("item 5")
+          )
+        )
+        .unwrap();
+
+        document.querySelector("body").appendChild(element);
+    });
+    </script>
+  </head>
+  <body>
+
+  </body>
+</html>
