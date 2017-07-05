@@ -2,6 +2,8 @@
   "name": "element-wrapper",
   "version": "0.0.1",
   "main": "dist/element-wrapper.js",
+  "js:next": "dist/element-wrapper-es.js",
+  "module": "dist/element-wrapper-es.js",
   "repository": "git@github.com:mickaelvieira/element-wrapper.git",
   "homepage":"https://github.com/mickaelvieira/element-wrapper",
   "author": "Mickael Vieira <contact@mickael-vieira.com>",
