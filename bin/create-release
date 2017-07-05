@@ -1,0 +1,94 @@
+#!/bin/bash
+
+set -e -u -o pipefail
+# set -x
+
+declare -r WD="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
+declare -r PACKAGE_FILE="$WD/package.json"
+
+info() {
+    printf "\x1b[32m\xE2\x87\x92 %s\x1b[0m\n" "$1"
+}
+
+error() {
+    printf "\x1b[97m\x1b[41m\x21\x1b[0m \x1b[31m%s\x1b[0m\n" "$1" 1>&2
+    exit 1
+}
+
+get_version() {
+  local version
+  if [[ -f "$PACKAGE_FILE" ]]; then
+      version=$(grep -E "version" "$PACKAGE_FILE" | grep -Eo "([\.0-9]+)")
+  fi
+  echo "$version"
+}
+
+get_branch() {
+    git branch | grep -E "^\*" | awk '{print $2}'
+}
+
+get_access_token() {
+    local file=$1
+    cat "$file"
+}
+
+get_payload() {
+    local version=$1
+    cat <<EOM
+{
+  "tag_name": "v$version",
+  "target_commitish": "master",
+  "name": "v$version",
+  "body": "Release of version $version",
+  "draft": false,
+  "prerelease": false
+}
+EOM
+}
+
+get_confirmation_message() {
+    local branch=$1
+    local version=$2
+
+  cat <<EOM
+You are about to create a new release:
+- Branch: \x1b[33m${branch}\x1b[0m
+- Version: \x1b[33m${version}\x1b[0m
+
+Do you want to proceed [y/N]:
+EOM
+}
+
+main() {
+    local owner="mickaelvieira"
+    local repo="element-wrapper"
+    local endpoint="https://api.github.com/repos/$owner/$repo/releases"
+    local branch="$(get_branch)"
+    local version="$(get_version)"
+    local credentials="$WD/github/.access_token"
+
+    [[ "$branch" != master ]] && error "Your are not on the master branch mate."
+    [[ -f "$credentials" ]] || error "Access Token file does not exist"
+
+    local token=$(get_access_token "$credentials")
+    local payload=$(get_payload "$version")
+    local message=$(get_confirmation_message "$branch" "$version")
+
+    read -erp "$(echo -e "$message")" answer
+
+    [[ -z "$answer" ]] && answer="n"
+
+    if [[ "$answer" == y ]]; then
+        info "Calling Github API..."
+        curl -v \
+          -X POST \
+          -H "Content-Type: application/json" \
+          -H "Authorization: token $token" \
+          --data "$payload" \
+          "$endpoint"
+    else
+        info "skipped!"
+    fi
+}
+
+main
