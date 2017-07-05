@@ -1,7 +1,7 @@
 {
   "name": "element-wrapper",
   "version": "0.0.1",
-  "main": "src/index.js",
+  "main": "./dist/element-wrapper.js",
   "repository": "git@github.com:mickaelvieira/element-wrapper.git",
   "author": "Mickael Vieira <contact@mickael-vieira.com>",
   "license": "MIT",
