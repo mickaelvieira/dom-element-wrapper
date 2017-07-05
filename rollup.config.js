@@ -8,7 +8,7 @@ const plugins = [
 
 export default {
   entry: "src/index.js",
-  moduleName: "elementWrapper",
+  moduleName: "ElementWrapper",
   exports: "named",
   format: "umd",
   plugins,

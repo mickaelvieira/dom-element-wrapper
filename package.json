@@ -5,7 +5,7 @@
   "js:next": "dist/element-wrapper-es.js",
   "module": "dist/element-wrapper-es.js",
   "repository": "git@github.com:mickaelvieira/element-wrapper.git",
-  "homepage":"https://github.com/mickaelvieira/element-wrapper",
+  "homepage": "https://github.com/mickaelvieira/element-wrapper",
   "author": "Mickael Vieira <contact@mickael-vieira.com>",
   "license": "MIT",
   "bugs": {
@@ -29,7 +29,6 @@
     "prettier": "^1.5.2",
     "rollup": "^0.43.0",
     "rollup-plugin-babel": "^2.7.1",
-    "rollup-plugin-uglify": "^2.0.1",
     "rollup-watch": "^4.0.0"
   }
 }
