@@ -1,8 +1,8 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-	typeof define === 'function' && define.amd ? define(factory) :
-	(global.elementWrapper = factory());
-}(this, (function () { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+	typeof define === 'function' && define.amd ? define(['exports'], factory) :
+	(factory((global.elementWrapper = global.elementWrapper || {})));
+}(this, (function (exports) { 'use strict';
 
 /**
 * @param {Element} element
@@ -124,11 +124,9 @@ var createWrapper = function (name) {
   });
 };
 
-var index = {
-  createWrapper: createWrapper,
-  applyProperties: applyProperties
-};
+exports.createWrapper = createWrapper;
+exports.applyProperties = applyProperties;
 
-return index;
+Object.defineProperty(exports, '__esModule', { value: true });
 
 })));

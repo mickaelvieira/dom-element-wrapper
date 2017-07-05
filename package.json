@@ -1,11 +1,16 @@
 {
   "name": "element-wrapper",
   "version": "0.0.1",
-  "main": "./dist/element-wrapper.js",
+  "main": "dist/element-wrapper.js",
   "repository": "git@github.com:mickaelvieira/element-wrapper.git",
+  "homepage":"https://github.com/mickaelvieira/element-wrapper",
   "author": "Mickael Vieira <contact@mickael-vieira.com>",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mickaelvieira/element-wrapper/issues"
+  },
   "scripts": {
+    "lint": "eslint --quiet -c .eslintrc src",
     "test": "NODE_ENV=test jest --config=jest.json",
     "test:watch": "yarn run test -- --watch",
     "watch": "rollup -c rollup.config.js --watch",

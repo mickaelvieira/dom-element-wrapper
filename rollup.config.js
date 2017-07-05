@@ -4,6 +4,7 @@ import uglify from "rollup-plugin-uglify";
 const isProd = process.env.NODE_ENV === "production";
 
 const format = "umd";
+const exports = "named";
 const moduleName = "elementWrapper";
 const sourceMap = false;
 const plugins = [
@@ -22,6 +23,7 @@ export default {
   entry: "src/index.js",
   dest: `dist/element-wrapper${min}.js`,
   moduleName,
+  exports,
   format,
   plugins,
   sourceMap
