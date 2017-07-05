@@ -1,17 +1,15 @@
 import babel from "rollup-plugin-babel";
 
-const plugins = [
-  babel({
-    exclude: "node_modules/**"
-  })
-];
-
 export default {
   entry: "src/index.js",
   moduleName: "ElementWrapper",
   exports: "named",
   format: "umd",
-  plugins,
+  plugins: [
+    babel({
+      exclude: "node_modules/**"
+    })
+  ],
   sourceMap: false,
   targets: [
     { dest: `dist/element-wrapper.js`, format: "umd" },
