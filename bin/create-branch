@@ -110,7 +110,7 @@ create_next_release_branch() {
             git checkout -b "$branch_name"
             update_version "$branch_name"
             git add "$PACKAGE_FILE"
-            git commit -m "Update application's version and dependencies"
+            git commit -m "Update application's version"
             git push
         fi
     else
