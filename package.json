@@ -7,6 +7,7 @@
   "license": "MIT",
   "scripts": {
     "test": "NODE_ENV=test jest --config=jest.json",
+    "test:watch": "yarn run test -- --watch",
     "watch": "rollup -c rollup.config.js --watch",
     "build": "rollup -c rollup.config.js"
   },
