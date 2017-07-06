@@ -2,7 +2,7 @@ import babel from "rollup-plugin-babel";
 
 export default {
   entry: "src/index.js",
-  moduleName: "ElementWrapper",
+  moduleName: "DOMElementWrapper",
   exports: "named",
   format: "umd",
   plugins: [
@@ -12,7 +12,7 @@ export default {
   ],
   sourceMap: false,
   targets: [
-    { dest: `dist/element-wrapper.js`, format: "umd" },
-    { dest: `dist/element-wrapper-es.js`, format: "es" }
+    { dest: `dist/dom-element-wrapper.js`, format: "umd" },
+    { dest: `dist/dom-element-wrapper-es.js`, format: "es" }
   ]
 };

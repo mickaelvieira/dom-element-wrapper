@@ -1,15 +1,15 @@
 {
-  "name": "element-wrapper",
+  "name": "dom-element-wrapper",
   "version": "0.0.2",
-  "main": "dist/element-wrapper.js",
-  "js:next": "dist/element-wrapper-es.js",
-  "module": "dist/element-wrapper-es.js",
-  "repository": "git@github.com:mickaelvieira/element-wrapper.git",
-  "homepage": "https://github.com/mickaelvieira/element-wrapper",
+  "main": "dist/dom-element-wrapper.js",
+  "js:next": "dist/dom-element-wrapper-es.js",
+  "module": "dist/dom-element-wrapper-es.js",
+  "repository": "git@github.com:mickaelvieira/dom-element-wrapper.git",
+  "homepage": "https://github.com/mickaelvieira/dom-element-wrapper",
   "author": "Mickael Vieira <contact@mickael-vieira.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mickaelvieira/element-wrapper/issues"
+    "url": "https://github.com/mickaelvieira/dom-element-wrapper/issues"
   },
   "scripts": {
     "clean": "rm -rf ./dist",

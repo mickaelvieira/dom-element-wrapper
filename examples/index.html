@@ -5,10 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <script src="../dist/element-wrapper.js"></script>
+    <script src="../dist/dom-element-wrapper.js"></script>
     <script>
     window.addEventListener("DOMContentLoaded", function () {
-      const createWrapper = ElementWrapper.createWrapper;
+      const createWrapper = DOMElementWrapper.createWrapper;
       const element = createWrapper("div")
         .setAttribute("id", "element-id")
         .appendWrappers(

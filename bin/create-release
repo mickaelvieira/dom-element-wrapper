@@ -61,7 +61,7 @@ EOM
 
 main() {
     local owner="mickaelvieira"
-    local repo="element-wrapper"
+    local repo="dom-element-wrapper"
     local endpoint="https://api.github.com/repos/$owner/$repo/releases"
     local branch="$(get_branch)"
     local version="$(get_version)"

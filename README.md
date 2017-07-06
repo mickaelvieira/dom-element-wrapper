@@ -1,7 +1,7 @@
 # Element Wrapper
 
-[![Build Status](https://travis-ci.org/mickaelvieira/element-wrapper.svg?branch=master)](https://travis-ci.org/mickaelvieira/element-wrapper)
-[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](https://github.com/mickaelvieira/element-wrapper/blob/master/LICENSE.md)
+[![Build Status](https://travis-ci.org/mickaelvieira/dom-element-wrapper.svg?branch=master)](https://travis-ci.org/mickaelvieira/dom-element-wrapper)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](https://github.com/mickaelvieira/dom-element-wrapper/blob/master/LICENSE.md)
 
 ## Motivation
 
@@ -12,19 +12,21 @@ If like me, you like chaining stuff and you feel sad when you have to use the OM
 ## Install
 
 ```
-$ npm i --save redux-logger
+$ npm i --save dom-element-wrapper
 ```
 
 or
 
 ```
-$ yarn add element-wrapper
+$ yarn add dom-element-wrapper
 ```
 
 ## Usage
 
+
+
 ```
-import { createWrapper } from "element-wrapper";
+import { createWrapper } from "dom-element-wrapper";
 
 const element = createWrapper("div")
   .setAttribute("id", "element-id")
