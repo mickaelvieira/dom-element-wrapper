@@ -27,22 +27,50 @@ function tryNodeName(value) {
 export default function(name, props = {}) {
   const element = applyProperties(document.createElement(name), props);
 
-  element.appendTextNode = function(text) {
-    this.appendChild(document.createTextNode(text));
-  };
-
+  /**
+   * Append a node to an existing node
+   *
+   * @param {String} name
+   * @param {Object} props
+   *
+   * @returns {Node}
+   */
   element.appendNode = function(name, props = {}) {
     this.appendChild(applyProperties(document.createElement(name), props));
-  };
-
-  element.appendWrappers = function(...wrappers) {
-    wrappers.map(wrapper => this.appendChild(wrapper.unwrap()));
-  };
-
-  element.unwrap = function() {
     return this;
   };
 
+  /**
+   * Append a text node to an existing node
+   *
+   * @param {String} text
+   *
+   * @returns {Node}
+   */
+  element.appendTextNode = function(text) {
+    this.appendChild(document.createTextNode(text));
+    return this;
+  };
+
+  /**
+   * Append a list of wrappers to an existing node
+   *
+   * @param {Proxy} wrappers
+   *
+   * @returns {Node}
+   */
+  element.appendWrappers = function(...wrappers) {
+    wrappers.map(wrapper => this.appendChild(wrapper.unwrap()));
+    return this;
+  };
+
+  /**
+   * Convenient method to append multiple nodes to an existing node
+   *
+   * @param {String|Array|Node} children
+   *
+   * @returns {Node}
+   */
   element.appendChildren = function(...children) {
     children.map(child => {
       if (typeof child === "string") {
@@ -55,26 +83,31 @@ export default function(name, props = {}) {
     });
   };
 
+  /**
+   * Reveal the underlying node
+   *
+   * @returns {Node}
+   */
+  element.unwrap = function() {
+    return this;
+  };
+
   return new Proxy(element, {
     get: function(target, name, receiver) {
       if (!(name in target)) {
         throw new Error(`Invalid method or property name "${name}"`);
       }
 
-      if (name === "unwrap") {
-        return () => target;
-      }
-
       if (typeof target[name] !== "function") {
         return target[name];
       }
 
-      return function() {
-        const args = Array.from(arguments);
+      return function(...args) {
         const result = target[name](...args);
         return /^(get|has)/.test(name) ? result : receiver;
       };
     },
+
     set: function(target, prop, value, receiver) {
       target[prop] = value;
       return receiver;

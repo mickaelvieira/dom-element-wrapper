@@ -28,8 +28,48 @@ $ yarn add dom-element-wrapper
 
 ## Usage
 
+Instead of the writing this:
 
+```
+const element = document.createElement("div");
+element.id = "element-id";
 
+const div = document.createElement("div");
+const p = document.createElement("p");
+
+p.appendChild(document.createTextNode("Lorem ipsum"));
+div.appendChild(p);
+
+element.appendChild(div);
+
+const ul = document.createElement("ul");
+
+const li1 = document.createElement("li");
+li1.appendChild(document.createTextNode("item 1"));
+ul.appendChild(li1);
+
+const li2 = document.createElement("li");
+li2.appendChild(document.createTextNode("item 2"));
+ul.appendChild(li2);
+
+const li3 = document.createElement("li");
+li3.appendChild(document.createTextNode("item 3"));
+ul.appendChild(li3);
+
+const li4 = document.createElement("li");
+li4.appendChild(document.createTextNode("item 4"));
+ul.appendChild(li4);
+
+const li5 = document.createElement("li");
+li5.appendChild(document.createTextNode("item 5"));
+ul.appendChild(li5);
+
+element.appendChild(ul);
+
+document.querySelector("body").appendChild(element);
+```
+
+Simply write that:
 ```
 import { createWrapper } from "dom-element-wrapper";
 
@@ -52,6 +92,7 @@ const element = createWrapper("div")
 document.querySelector("body").appendChild(element);
 ```
 
+It will create the following HTML structure:
 ```
 <div id="element-id">
   <div>
