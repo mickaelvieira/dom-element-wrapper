@@ -1,22 +1,32 @@
 {
-  "name": "element-wrapper",
-  "version": "0.0.1",
-  "main": "dist/element-wrapper.js",
-  "js:next": "dist/element-wrapper-es.js",
-  "module": "dist/element-wrapper-es.js",
-  "repository": "git@github.com:mickaelvieira/element-wrapper.git",
-  "homepage": "https://github.com/mickaelvieira/element-wrapper",
+  "name": "dom-element-wrapper",
+  "version": "0.0.2",
+  "main": "dist/dom-element-wrapper.js",
+  "js:next": "dist/dom-element-wrapper-es.js",
+  "module": "dist/dom-element-wrapper-es.js",
+  "repository": "git@github.com:mickaelvieira/dom-element-wrapper.git",
+  "homepage": "https://github.com/mickaelvieira/dom-element-wrapper",
   "author": "Mickael Vieira <contact@mickael-vieira.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mickaelvieira/element-wrapper/issues"
+    "url": "https://github.com/mickaelvieira/dom-element-wrapper/issues"
   },
+  "keywords": [
+    "dom",
+    "api",
+    "wrapper",
+    "es6"
+  ],
   "scripts": {
+    "clean": "rm -rf ./dist",
+    "fmt": "prettier --write ./src/*.js && prettier --write ./spec/*.js",
     "lint": "eslint --quiet -c .eslintrc src",
     "test": "NODE_ENV=test jest --config=jest.json",
     "test:watch": "yarn run test -- --watch",
+    "test:coverage": "yarn run test -- --coverage",
     "watch": "rollup -c rollup.config.js --watch",
-    "build": "rollup -c rollup.config.js"
+    "build": "rollup -c rollup.config.js",
+    "prepublish": "npm run clean && npm test && npm run build"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
@@ -29,6 +39,9 @@
     "prettier": "^1.5.2",
     "rollup": "^0.43.0",
     "rollup-plugin-babel": "^2.7.1",
-    "rollup-watch": "^4.0.0"
-  }
+    "rollup-plugin-uglify": "^2.0.1",
+    "rollup-watch": "^4.0.0",
+    "uglify-es": "^3.0.23"
+  },
+  "dependencies": {}
 }

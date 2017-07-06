@@ -1,4 +1,6 @@
 *.map
 node_modules
+dist
+coverage
 yarn.lock
-github/.access_token
+.github/.access_token

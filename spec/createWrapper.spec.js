@@ -1,9 +1,43 @@
 import createWrapper from "../src/createWrapper";
 
 describe("createWrapper", () => {
-  test("returns the underlying node", () => {
-    const element = createWrapper("div").appendNode("p");
-    expect(element.unwrap() instanceof Element).toBe(true);
+  test("can create a node and wrap it", () => {
+    const wrapper = createWrapper("div");
+
+    expect(wrapper.nodeType).toBe(Node.ELEMENT_NODE);
+    expect(wrapper.nodeName.toLowerCase()).toBe("div");
+  });
+
+  test("can wrap an existing node", () => {
+    const wrapper = createWrapper(document.createElement("div"));
+
+    expect(wrapper.nodeType).toBe(Node.ELEMENT_NODE);
+    expect(wrapper.nodeName.toLowerCase()).toBe("div");
+  });
+
+  test("revokes the proxy and returns the underlying node", () => {
+    const wrapper = createWrapper("div");
+    expect(wrapper.nodeType).toBe(Node.ELEMENT_NODE);
+
+    const node = wrapper.unwrap();
+
+    expect(node.nodeType).toBe(Node.ELEMENT_NODE);
+
+    expect(() => {
+      const type = wrapper.nodeType;
+    }).toThrow();
+  });
+
+  test("knows its prototypes", () => {
+    const wrapper = createWrapper("div");
+    expect(wrapper instanceof EventTarget).toBe(true);
+    expect(wrapper instanceof Node).toBe(true);
+    expect(wrapper instanceof Element).toBe(true);
+
+    const node = wrapper.unwrap();
+    expect(node instanceof EventTarget).toBe(true);
+    expect(node instanceof Node).toBe(true);
+    expect(node instanceof Element).toBe(true);
   });
 
   test("returns the node type", () => {
@@ -62,12 +96,45 @@ describe("createWrapper", () => {
     expect(element.hasAttribute("class")).toBe(true);
   });
 
-  test("may call method on the subject", () => {
+  test("should return of methods starting with get, has, is", () => {
     const element = createWrapper("div", {
       className: "my-class-name",
       id: "my-element"
     });
     expect(element.getAttribute("id")).toBe("my-element");
+    expect(element.hasAttribute("class")).toBe(true);
+    expect(element.isEqualNode(element)).toBe(true);
+  });
+
+  test("should be able to clone a node", () => {
+    const wrapper = createWrapper("div");
+    const node2 = wrapper.cloneNode(true);
+    const node1 = wrapper.unwrap();
+
+    expect(node1.nodeType).toBe(Node.ELEMENT_NODE);
+    expect(node2.nodeType).toBe(Node.ELEMENT_NODE);
+    expect(node1 === node2).toBe(false);
+  });
+
+  test("should not intercept whitelisted methods", () => {
+    const wrapper = createWrapper("div").appendNode("p", {
+      className: "my-class"
+    });
+
+    expect(
+      wrapper.compareDocumentPosition(document.createElement("p"))
+    ).toEqual(expect.any(Number));
+
+    expect(wrapper.contains(document.createElement("p"))).toEqual(
+      expect.any(Boolean)
+    );
+
+    // expect(wrapper.lookupNamespaceURI()).toEqual(expect.any(String));
+    // expect(wrapper.lookupPrefix()).toEqual(expect.any(String));
+
+    expect(wrapper.matches("div")).toEqual(expect.any(Boolean));
+    expect(wrapper.querySelector(".my-class")).toEqual(expect.any(Node));
+    expect(wrapper.querySelectorAll(".my-class")).toEqual(expect.any(NodeList));
   });
 
   test("appends a text node", () => {

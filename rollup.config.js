@@ -1,20 +1,21 @@
 import babel from "rollup-plugin-babel";
-
-const plugins = [
-  babel({
-    exclude: "node_modules/**"
-  })
-];
+import uglify from "rollup-plugin-uglify";
+import { minify } from "uglify-es";
 
 export default {
   entry: "src/index.js",
-  moduleName: "ElementWrapper",
+  moduleName: "DOMElementWrapper",
   exports: "named",
   format: "umd",
-  plugins,
+  plugins: [
+    babel({
+      exclude: "node_modules/**"
+    }),
+    uglify({}, minify)
+  ],
   sourceMap: false,
   targets: [
-    { dest: `dist/element-wrapper.js`, format: "umd" },
-    { dest: `dist/element-wrapper-es.js`, format: "es" }
+    { dest: `dist/dom-element-wrapper.js`, format: "umd" },
+    { dest: `dist/dom-element-wrapper-es.js`, format: "es" }
   ]
 };

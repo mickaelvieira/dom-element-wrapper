@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <script src="../dist/dom-element-wrapper.js"></script>
+    <script>
+    window.addEventListener("DOMContentLoaded", function () {
+      const createWrapper = DOMElementWrapper.createWrapper;
+      const element1 = createWrapper("div")
+        .setAttribute("id", "element-id")
+        .appendWrappers(
+          createWrapper("div").appendWrappers(
+            createWrapper("p").appendTextNode("Lorem ipsum")
+          ),
+          createWrapper("ul").appendWrappers(
+            createWrapper("li").appendTextNode("item 1"),
+            createWrapper("li").appendTextNode("item 2"),
+            createWrapper("li").appendTextNode("item 3"),
+            createWrapper("li").appendTextNode("item 4"),
+            createWrapper("li").appendTextNode("item 5")
+          )
+        )
+        .unwrap();
+
+      const element2 = createWrapper("div", { style: "padding: 12px; background-color: grey" })
+        .appendWrappers(
+          createWrapper("input", { type: "button", value: "Click me" })
+            .addEventListener("click", function handler(event) {
+              alert("clicked!");
+            })
+        )
+        .setAttribute("id", "element-id-2")
+        .unwrap();
+
+      const body = createWrapper(document.querySelector("body"))
+        .appendChild(element1)
+        .appendChild(element2);
+    });
+    </script>
+  </head>
+  <body>
+
+  </body>
+</html>
