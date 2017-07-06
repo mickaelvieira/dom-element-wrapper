@@ -110,7 +110,20 @@ It will create the following HTML structure:
 
 ## Contributing
 
+Install the dependencies
+
 ```
 $ yarn run build
-$ yarn run test
+```
+
+Run the test suite
+
+```
+$ yarn test
+```
+
+Run the linter
+
+```
+$ yarn run lint
 ```
