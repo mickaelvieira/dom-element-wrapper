@@ -25,8 +25,12 @@ function tryNodeName(value) {
 *
 * @returns {Proxy}
 */
-export default function(name, props = {}) {
-  const element = applyProperties(document.createElement(name), props);
+export default function(nameOrNode, props = {}) {
+  const node =
+    typeof nameOrNode === "string"
+      ? document.createElement(nameOrNode)
+      : nameOrNode;
+  const element = applyProperties(node, props);
 
   /**
    * Append a node to an existing node

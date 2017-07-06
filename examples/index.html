@@ -9,7 +9,7 @@
     <script>
     window.addEventListener("DOMContentLoaded", function () {
       const createWrapper = DOMElementWrapper.createWrapper;
-      const element = createWrapper("div")
+      const element1 = createWrapper("div")
         .setAttribute("id", "element-id")
         .appendWrappers(
           createWrapper("div").appendWrappers(
@@ -25,7 +25,19 @@
         )
         .unwrap();
 
-        document.querySelector("body").appendChild(element);
+      const element2 = createWrapper("div", { style: "padding: 12px; background-color: grey" })
+        .appendWrappers(
+          createWrapper("input", { type: "button", value: "Click me" })
+            .addEventListener("click", function handler(event) {
+              alert("clicked!");
+            })
+        )
+        .setAttribute("id", "element-id-2")
+        .unwrap();
+
+      const body = createWrapper(document.querySelector("body"))
+        .appendChild(element1)
+        .appendChild(element2);
     });
     </script>
   </head>
