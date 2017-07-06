@@ -5,9 +5,9 @@
 
 ## Motivation
 
-This module aims to provide a more friendly interface when it comes to creating
+This module aims to provide a friendlier interface when it comes to creating
 nodes using the DOM API.
-If like me, you like chaining stuff and you feel sad when you have to use the OM API, this library is made for you.
+If like me, you enjoy chaining stuff and you feel sad when you have to use the DOM API, this library is made for you.
 
 ## Limitation
 

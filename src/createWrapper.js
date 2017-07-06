@@ -1,4 +1,5 @@
 import applyProperties from "./applyProperties";
+import whiteList from "./whiteList";
 
 /**
 * Try to create a node with the value provided
@@ -81,18 +82,20 @@ export default function(name, props = {}) {
         this.appendChild(child);
       }
     });
+    return this;
   };
 
   /**
-   * Reveal the underlying node
+   * Revoke the proxy and return the underlying node
    *
    * @returns {Node}
    */
   element.unwrap = function() {
+    revoke();
     return this;
   };
 
-  return new Proxy(element, {
+  const { proxy, revoke } = Proxy.revocable(element, {
     get: function(target, name, receiver) {
       if (!(name in target)) {
         throw new Error(`Invalid method or property name "${name}"`);
@@ -104,7 +107,9 @@ export default function(name, props = {}) {
 
       return function(...args) {
         const result = target[name](...args);
-        return /^(get|has)/.test(name) ? result : receiver;
+        return /^(get|has|is)/.test(name) || whiteList.indexOf(name) >= 0
+          ? result
+          : receiver;
       };
     },
 
@@ -113,4 +118,6 @@ export default function(name, props = {}) {
       return receiver;
     }
   });
+
+  return proxy;
 }
