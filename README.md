@@ -129,3 +129,9 @@ Run the linter
 ```sh
 $ yarn run lint
 ```
+
+Format the source code
+
+```sh
+$ yarn run fmt
+```
