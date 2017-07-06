@@ -20,8 +20,8 @@ function tryNodeName(value) {
 /**
 * Create and wrap an Element in order to chain its methods
 *
-* @param {String} name
-* @param {Object} props
+* @param {String|Node} nameOrNode
+* @param {Object}      props
 *
 * @returns {Proxy}
 */
@@ -30,6 +30,7 @@ export default function(nameOrNode, props = {}) {
     typeof nameOrNode === "string"
       ? document.createElement(nameOrNode)
       : nameOrNode;
+
   const element = applyProperties(node, props);
 
   /**
