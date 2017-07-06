@@ -9,6 +9,11 @@ This module aims to provide a more friendly interface when it comes to creating
 nodes using the DOM API.
 If like me, you like chaining stuff and you feel sad when you have to use the OM API, this library is made for you.
 
+## Limitation
+
+The library relies on the [Proxy](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Proxy) object which is not
+yet supported by [all browsers](http://kangax.github.io/compat-table/es6/#Proxy) and cannot be [transpiled or polyfilled](https://babeljs.io/learn-es2015/#ecmascript-2015-features-proxies).
+
 ## Install
 
 ```
