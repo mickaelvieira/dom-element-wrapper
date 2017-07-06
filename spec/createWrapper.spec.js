@@ -1,6 +1,20 @@
 import createWrapper from "../src/createWrapper";
 
 describe("createWrapper", () => {
+  test("can create a node and wrap it", () => {
+    const wrapper = createWrapper("div");
+
+    expect(wrapper.nodeType).toBe(Node.ELEMENT_NODE);
+    expect(wrapper.nodeName.toLowerCase()).toBe("div");
+  });
+
+  test("can wrap an existing node", () => {
+    const wrapper = createWrapper(document.createElement("div"));
+
+    expect(wrapper.nodeType).toBe(Node.ELEMENT_NODE);
+    expect(wrapper.nodeName.toLowerCase()).toBe("div");
+  });
+
   test("revokes the proxy and returns the underlying node", () => {
     const wrapper = createWrapper("div");
     expect(wrapper.nodeType).toBe(Node.ELEMENT_NODE);
