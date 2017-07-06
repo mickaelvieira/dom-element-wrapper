@@ -1,10 +1,10 @@
 /**
-* @param {Element} element
-* @param {Object}  props
+* @param {Object} object
+* @param {Object} props
 *
-* @returns {Element}
+* @returns {Object}
 */
-export default function(element, props = {}) {
-  Object.keys(props).forEach(prop => (element[prop] = props[prop]));
-  return element;
+export default function(object, props = {}) {
+  Object.keys(props).forEach(prop => (object[prop] = props[prop]));
+  return object;
 }

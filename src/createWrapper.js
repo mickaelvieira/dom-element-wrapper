@@ -5,7 +5,7 @@ import whiteList from "./whiteList";
 * Try to create a node with the value provided
 * otherwise it returns a text node containing the name provided
 *
-* @param {string} value
+* @param {String} value
 *
 * @returns {Node}
 */
