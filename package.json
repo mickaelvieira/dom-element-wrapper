@@ -12,11 +12,13 @@
     "url": "https://github.com/mickaelvieira/element-wrapper/issues"
   },
   "scripts": {
+    "clean": "rm -rf ./dist",
     "lint": "eslint --quiet -c .eslintrc src",
     "test": "NODE_ENV=test jest --config=jest.json",
     "test:watch": "yarn run test -- --watch",
     "watch": "rollup -c rollup.config.js --watch",
-    "build": "rollup -c rollup.config.js"
+    "build": "rollup -c rollup.config.js",
+    "prepublish": "yarn run clean && yarn test && yarn run build"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
