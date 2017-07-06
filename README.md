@@ -16,13 +16,13 @@ yet supported by [all browsers](http://kangax.github.io/compat-table/es6/#Proxy)
 
 ## Install
 
-```
+```sh
 $ npm i --save dom-element-wrapper
 ```
 
 or
 
-```
+```sh
 $ yarn add dom-element-wrapper
 ```
 
@@ -30,7 +30,7 @@ $ yarn add dom-element-wrapper
 
 Instead of the writing this:
 
-```
+```js
 const element = document.createElement("div");
 element.id = "element-id";
 
@@ -70,7 +70,8 @@ document.querySelector("body").appendChild(element);
 ```
 
 Simply write that:
-```
+
+```js
 import { createWrapper } from "dom-element-wrapper";
 
 const element = createWrapper("div")
@@ -93,7 +94,8 @@ document.querySelector("body").appendChild(element);
 ```
 
 It will create the following HTML structure:
-```
+
+```html
 <div id="element-id">
   <div>
     <p>Lorem ipsum</p>
@@ -112,18 +114,18 @@ It will create the following HTML structure:
 
 Install the dependencies
 
-```
+```sh
 $ yarn run build
 ```
 
 Run the test suite
 
-```
+```sh
 $ yarn test
 ```
 
 Run the linter
 
-```
+```sh
 $ yarn run lint
 ```
