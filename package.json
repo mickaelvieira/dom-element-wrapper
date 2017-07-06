@@ -11,6 +11,12 @@
   "bugs": {
     "url": "https://github.com/mickaelvieira/dom-element-wrapper/issues"
   },
+  "keywords": [
+    "dom",
+    "api",
+    "wrapper",
+    "es6"
+  ],
   "scripts": {
     "clean": "rm -rf ./dist",
     "lint": "eslint --quiet -c .eslintrc src",
@@ -32,6 +38,9 @@
     "prettier": "^1.5.2",
     "rollup": "^0.43.0",
     "rollup-plugin-babel": "^2.7.1",
-    "rollup-watch": "^4.0.0"
-  }
+    "rollup-plugin-uglify": "^2.0.1",
+    "rollup-watch": "^4.0.0",
+    "uglify-es": "^3.0.23"
+  },
+  "dependencies": {}
 }
