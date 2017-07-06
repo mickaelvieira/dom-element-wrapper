@@ -1,5 +1,8 @@
 # Element Wrapper
 
+[![Build Status](https://travis-ci.org/mickaelvieira/element-wrapper.svg?branch=master)](https://travis-ci.org/mickaelvieira/element-wrapper)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](https://github.com/mickaelvieira/element-wrapper/blob/master/LICENSE.md)
+
 ## Motivation
 
 This module aims to provide a more friendly interface when it comes to creating
