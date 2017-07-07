@@ -1,5 +1,15 @@
-import applyProperties from "./applyProperties";
 import whiteList from "./whiteList";
+
+/**
+* @param {Object} object
+* @param {Object} props
+*
+* @returns {Object}
+*/
+function applyProperties(object, props = {}) {
+  Object.keys(props).forEach(prop => (object[prop] = props[prop]));
+  return object;
+}
 
 /**
 * Try to create a node with the value provided
