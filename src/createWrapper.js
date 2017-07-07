@@ -18,6 +18,18 @@ function tryNodeName(value) {
 }
 
 /**
+* Restore the node as it was before wrapping
+*
+* @param {Node} node
+*
+* @returns {Node}
+*/
+function restore(node) {
+  Object.keys(node).map(key => delete node[key]);
+  return node;
+}
+
+/**
 * Create and wrap an Element in order to chain its methods
 *
 * @param {String|Node} nameOrNode
@@ -71,7 +83,7 @@ export default function(nameOrNode, props = {}) {
   };
 
   /**
-   * Convenient method to append multiple nodes to an existing node
+   * Append multiple nodes to an existing node
    *
    * @param {String|Array|Node} children
    *
@@ -91,13 +103,13 @@ export default function(nameOrNode, props = {}) {
   };
 
   /**
-   * Revoke the proxy and return the underlying node
+   * Revoke the proxy and restore the underlying node and return it
    *
    * @returns {Node}
    */
   element.unwrap = function() {
     revoke();
-    return this;
+    return restore(this);
   };
 
   const { proxy, revoke } = Proxy.revocable(element, {

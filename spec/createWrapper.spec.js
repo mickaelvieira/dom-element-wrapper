@@ -206,4 +206,15 @@ describe("createWrapper", () => {
     expect(element.lastChild.nodeName.toLowerCase()).toBe("span");
     expect(element.lastChild.id).toBe("element-id");
   });
+
+  test("restores the node as it was before wrapping", () => {
+    const wrapper = createWrapper("div");
+    const node = wrapper.unwrap();
+
+    expect(node.unwrap).toBeUndefined();
+    expect(node.appendNode).toBeUndefined();
+    expect(node.appendTextNode).toBeUndefined();
+    expect(node.appendWrappers).toBeUndefined();
+    expect(node.appendChildren).toBeUndefined();
+  });
 });
