@@ -30,12 +30,15 @@ function tryNodeName(value) {
 /**
 * Restore the node as it was before wrapping
 *
-* @param {Node} node
+* @param {Node}  node
+* @param {Array} privKeys
 *
 * @returns {Node}
 */
-function restore(node) {
-  Object.keys(node).map(key => delete node[key]);
+function restore(node, privKeys) {
+  Object.keys(node)
+    .filter(prop => privKeys.indexOf(prop) >= 0)
+    .forEach(key => delete node[key]);
   return node;
 }
 
@@ -46,6 +49,16 @@ function restore(node) {
 */
 function doesMethodReturnRelevantValue(name) {
   return /^(get|has|is)/.test(name) || whiteList.indexOf(name) >= 0;
+}
+
+/**
+* @param {Array} subject
+* @param {Array} excluded
+*
+* @returns {Array}
+*/
+function excludeValues(subject, excluded) {
+  return subject.filter(value => excluded.indexOf(value) === -1);
 }
 
 /**
@@ -62,6 +75,14 @@ export default function(nameOrNode, props = {}) {
       ? document.createElement(nameOrNode)
       : nameOrNode;
 
+  /**
+   * Cache object enumerable properties
+   */
+  const ownKeys = Object.keys(node);
+
+  /**
+   * apply properties
+   */
   const element = applyProperties(node, props);
 
   /**
@@ -128,8 +149,13 @@ export default function(nameOrNode, props = {}) {
    */
   element.unwrap = function() {
     revoke();
-    return restore(this);
+    return restore(this, privKeys);
   };
+
+  /**
+   * Retrieve lib only properties
+   */
+  const privKeys = excludeValues(Object.keys(node), ownKeys);
 
   const { proxy, revoke } = Proxy.revocable(element, {
     get: function(target, name, receiver) {
@@ -147,9 +173,8 @@ export default function(nameOrNode, props = {}) {
       };
     },
 
-    set: function(target, prop, value, receiver) {
-      target[prop] = value;
-      return receiver;
+    ownKeys: function(target) {
+      return excludeValues(Object.keys(target), privKeys);
     }
   });
 

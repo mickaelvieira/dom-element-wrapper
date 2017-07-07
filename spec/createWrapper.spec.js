@@ -208,7 +208,12 @@ describe("createWrapper", () => {
   });
 
   test("restores the node as it was before wrapping", () => {
-    const wrapper = createWrapper("div");
+    const element = document.createElement("div");
+    element.custom1 = "hello";
+
+    const wrapper = createWrapper(element);
+    wrapper.custom2 = function() {};
+
     const node = wrapper.unwrap();
 
     expect(node.unwrap).toBeUndefined();
@@ -216,5 +221,23 @@ describe("createWrapper", () => {
     expect(node.appendTextNode).toBeUndefined();
     expect(node.appendWrappers).toBeUndefined();
     expect(node.appendChildren).toBeUndefined();
+    expect(
+      (function() {
+        return node.custom1;
+      })()
+    ).toEqual(expect.any(String));
+    expect(node.custom2).toEqual(expect.any(Function));
+  });
+
+  test("does not enumerate its own properties", () => {
+    const node = document.createElement("div");
+    node.custom1 = function() {};
+
+    const wrapper = createWrapper(node);
+    node.custom2 = function() {};
+
+    wrapper.custom3 = "value";
+
+    expect(Object.keys(wrapper)).toEqual(["custom1", "custom2", "custom3"]);
   });
 });
