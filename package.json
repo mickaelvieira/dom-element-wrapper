@@ -24,7 +24,7 @@
     "lint": "eslint --quiet -c .eslintrc src",
     "test": "NODE_ENV=test jest --config=jest.json",
     "test:watch": "yarn run test -- --watch",
-    "test:coverage": "yarn run test -- --coverage",
+    "test:coverage": "npm run test -- --coverage",
     "test:coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "watch": "rollup -c rollup.config.js --watch",
     "build": "rollup -c rollup.config.js",
