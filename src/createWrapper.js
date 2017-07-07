@@ -40,6 +40,15 @@ function restore(node) {
 }
 
 /**
+* @param {String} name
+*
+* @returns {Boolean}
+*/
+function doesMethodReturnRelevantValue(name) {
+  return /^(get|has|is)/.test(name) || whiteList.indexOf(name) >= 0;
+}
+
+/**
 * Create and wrap an Element in order to chain its methods
 *
 * @param {String|Node} nameOrNode
@@ -134,9 +143,7 @@ export default function(nameOrNode, props = {}) {
 
       return function(...args) {
         const result = target[name](...args);
-        return /^(get|has|is)/.test(name) || whiteList.indexOf(name) >= 0
-          ? result
-          : receiver;
+        return doesMethodReturnRelevantValue(name) ? result : receiver;
       };
     },
 
