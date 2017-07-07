@@ -19,7 +19,7 @@
   ],
   "scripts": {
     "clean": "rm -rf ./dist",
-    "fmt": "prettier --write ./src/*.js && prettier --write ./spec/*.js",
+    "fmt": "prettier --write ./src/*.js && prettier --write ./spec/*.js && prettier --write rollup.config.js",
     "lint": "eslint --quiet -c .eslintrc src",
     "test": "NODE_ENV=test jest --config=jest.json",
     "test:watch": "yarn run test -- --watch",
