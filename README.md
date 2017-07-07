@@ -28,7 +28,7 @@ $ yarn add dom-element-wrapper
 
 ## Usage
 
-Instead of the writing this:
+Instead of writing this:
 
 ```js
 const element = document.createElement("div");
@@ -93,7 +93,7 @@ const element = createWrapper("div")
 document.querySelector("body").appendChild(element);
 ```
 
-It will create the following HTML structure:
+It will create the following HTML tree structure:
 
 ```html
 <div id="element-id">
