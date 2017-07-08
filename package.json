@@ -1,6 +1,7 @@
 {
   "name": "dom-element-wrapper",
-  "version": "0.0.2",
+  "description": "Make the DOM great again!",
+  "version": "0.0.3",
   "main": "dist/dom-element-wrapper.js",
   "js:next": "dist/dom-element-wrapper-es.js",
   "module": "dist/dom-element-wrapper-es.js",
@@ -19,11 +20,12 @@
   ],
   "scripts": {
     "clean": "rm -rf ./dist",
-    "fmt": "prettier --write ./src/*.js && prettier --write ./spec/*.js",
+    "fmt": "prettier --write ./src/*.js && prettier --write ./spec/*.js && prettier --write rollup.config.js",
     "lint": "eslint --quiet -c .eslintrc src",
     "test": "NODE_ENV=test jest --config=jest.json",
     "test:watch": "yarn run test -- --watch",
-    "test:coverage": "yarn run test -- --coverage",
+    "test:coverage": "npm run test -- --coverage",
+    "test:coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "watch": "rollup -c rollup.config.js --watch",
     "build": "rollup -c rollup.config.js",
     "prepublish": "npm run clean && npm test && npm run build"
@@ -33,6 +35,7 @@
     "babel-jest": "^20.0.3",
     "babel-preset-env": "^1.6.0",
     "babel-preset-es2015": "^6.24.1",
+    "coveralls": "^2.13.1",
     "eslint": "^4.1.1",
     "eslint-plugin-prettier": "^2.1.2",
     "jest": "^20.0.4",

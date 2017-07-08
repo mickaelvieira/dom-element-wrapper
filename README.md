@@ -1,7 +1,8 @@
-# Element Wrapper
+# DOM Element Wrapper
 
 [![Build Status](https://travis-ci.org/mickaelvieira/dom-element-wrapper.svg?branch=master)](https://travis-ci.org/mickaelvieira/dom-element-wrapper)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](https://github.com/mickaelvieira/dom-element-wrapper/blob/master/LICENSE.md)
+[![Coverage Status](https://coveralls.io/repos/github/mickaelvieira/dom-element-wrapper/badge.svg?branch=master)](https://coveralls.io/github/mickaelvieira/dom-element-wrapper?branch=master)
 
 ## Motivation
 
@@ -28,7 +29,7 @@ $ yarn add dom-element-wrapper
 
 ## Usage
 
-Instead of the writing this:
+Instead of writing this:
 
 ```js
 const element = document.createElement("div");
@@ -69,7 +70,7 @@ element.appendChild(ul);
 document.querySelector("body").appendChild(element);
 ```
 
-Simply write that:
+you can simply write that:
 
 ```js
 import { createWrapper } from "dom-element-wrapper";
@@ -93,7 +94,7 @@ const element = createWrapper("div")
 document.querySelector("body").appendChild(element);
 ```
 
-It will create the following HTML structure:
+It will create the following HTML tree structure:
 
 ```html
 <div id="element-id">

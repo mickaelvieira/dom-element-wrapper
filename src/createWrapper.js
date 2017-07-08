@@ -1,5 +1,15 @@
-import applyProperties from "./applyProperties";
 import whiteList from "./whiteList";
+
+/**
+* @param {Object} object
+* @param {Object} props
+*
+* @returns {Object}
+*/
+function applyProperties(object, props = {}) {
+  Object.keys(props).forEach(prop => (object[prop] = props[prop]));
+  return object;
+}
 
 /**
 * Try to create a node with the value provided
@@ -18,6 +28,40 @@ function tryNodeName(value) {
 }
 
 /**
+* Restore the node as it was before wrapping
+*
+* @param {Node}  node
+* @param {Array} privKeys
+*
+* @returns {Node}
+*/
+function restore(node, privKeys) {
+  Object.keys(node)
+    .filter(prop => privKeys.indexOf(prop) >= 0)
+    .forEach(key => delete node[key]);
+  return node;
+}
+
+/**
+* @param {String} name
+*
+* @returns {Boolean}
+*/
+function doesMethodReturnRelevantValue(name) {
+  return /^(get|has|is)/.test(name) || whiteList.indexOf(name) >= 0;
+}
+
+/**
+* @param {Array} subject
+* @param {Array} excluded
+*
+* @returns {Array}
+*/
+function excludeValues(subject, excluded) {
+  return subject.filter(value => excluded.indexOf(value) === -1);
+}
+
+/**
 * Create and wrap an Element in order to chain its methods
 *
 * @param {String|Node} nameOrNode
@@ -31,6 +75,14 @@ export default function(nameOrNode, props = {}) {
       ? document.createElement(nameOrNode)
       : nameOrNode;
 
+  /**
+   * Cache object enumerable properties
+   */
+  const ownKeys = Object.keys(node);
+
+  /**
+   * apply properties
+   */
   const element = applyProperties(node, props);
 
   /**
@@ -71,7 +123,7 @@ export default function(nameOrNode, props = {}) {
   };
 
   /**
-   * Convenient method to append multiple nodes to an existing node
+   * Append multiple nodes to an existing node
    *
    * @param {String|Array|Node} children
    *
@@ -91,14 +143,19 @@ export default function(nameOrNode, props = {}) {
   };
 
   /**
-   * Revoke the proxy and return the underlying node
+   * Revoke the proxy and restore the underlying node and return it
    *
    * @returns {Node}
    */
   element.unwrap = function() {
     revoke();
-    return this;
+    return restore(this, privKeys);
   };
+
+  /**
+   * Retrieve lib only properties
+   */
+  const privKeys = excludeValues(Object.keys(node), ownKeys);
 
   const { proxy, revoke } = Proxy.revocable(element, {
     get: function(target, name, receiver) {
@@ -112,15 +169,12 @@ export default function(nameOrNode, props = {}) {
 
       return function(...args) {
         const result = target[name](...args);
-        return /^(get|has|is)/.test(name) || whiteList.indexOf(name) >= 0
-          ? result
-          : receiver;
+        return doesMethodReturnRelevantValue(name) ? result : receiver;
       };
     },
 
-    set: function(target, prop, value, receiver) {
-      target[prop] = value;
-      return receiver;
+    ownKeys: function(target) {
+      return excludeValues(Object.keys(target), privKeys);
     }
   });
 
