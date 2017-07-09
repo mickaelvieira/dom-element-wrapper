@@ -6,7 +6,6 @@ export default {
   entry: "src/index.js",
   moduleName: "DOMElementWrapper",
   exports: "named",
-  format: "umd",
   plugins: [
     babel({
       exclude: "node_modules/**"
