@@ -19,16 +19,7 @@
     "es6"
   ],
   "scripts": {
-    "clean": "rm -rf ./dist",
-    "fmt": "prettier --write ./src/*.js && prettier --write ./spec/*.js && prettier --write rollup.config.js",
-    "lint": "eslint --quiet -c .eslintrc src",
-    "test": "NODE_ENV=test jest --config=jest.json",
-    "test:watch": "yarn run test -- --watch",
-    "test:coverage": "npm run test -- --coverage",
-    "test:coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-    "watch": "rollup -c rollup.config.js --watch",
-    "build": "rollup -c rollup.config.js",
-    "prepublish": "npm run clean && npm test && npm run build"
+    "prepublish": "make clean && make test && make build"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",

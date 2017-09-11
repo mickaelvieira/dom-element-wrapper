@@ -116,23 +116,23 @@ It will create the following HTML tree structure:
 Install the dependencies
 
 ```sh
-$ yarn run build
+$ make build
 ```
 
 Run the test suite
 
 ```sh
-$ yarn test
+$ make test
 ```
 
 Run the linter
 
 ```sh
-$ yarn run lint
+$ make lint
 ```
 
 Format the source code
 
 ```sh
-$ yarn run fmt
+$ make fmt
 ```
