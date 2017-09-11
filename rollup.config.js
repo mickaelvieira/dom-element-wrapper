@@ -3,10 +3,9 @@ import uglify from "rollup-plugin-uglify";
 import { minify } from "uglify-es";
 
 export default {
-  entry: "src/index.js",
-  moduleName: "DOMElementWrapper",
+  input: "src/index.js",
+  name: "DOMElementWrapper",
   exports: "named",
-  format: "umd",
   plugins: [
     babel({
       exclude: "node_modules/**"
@@ -14,8 +13,8 @@ export default {
     uglify({}, minify)
   ],
   sourceMap: false,
-  targets: [
-    { dest: `dist/dom-element-wrapper.js`, format: "umd" },
-    { dest: `dist/dom-element-wrapper-es.js`, format: "es" }
+  output: [
+    { file: `dist/dom-element-wrapper.js`, format: "umd" },
+    { file: `dist/dom-element-wrapper-es.js`, format: "es" }
   ]
 };
