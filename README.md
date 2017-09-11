@@ -1,14 +1,15 @@
 # DOM Element Wrapper
 
-[![Build Status](https://travis-ci.org/mickaelvieira/dom-element-wrapper.svg?branch=master)](https://travis-ci.org/mickaelvieira/dom-element-wrapper)
+[![npm](https://img.shields.io/npm/v/dom-element-wrapper.svg)](https://www.npmjs.com/package/dom-element-wrapper)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](https://github.com/mickaelvieira/dom-element-wrapper/blob/master/LICENSE.md)
+[![Build Status](https://travis-ci.org/mickaelvieira/dom-element-wrapper.svg?branch=master)](https://travis-ci.org/mickaelvieira/dom-element-wrapper)
 [![Coverage Status](https://coveralls.io/repos/github/mickaelvieira/dom-element-wrapper/badge.svg?branch=master)](https://coveralls.io/github/mickaelvieira/dom-element-wrapper?branch=master)
 
 ## Motivation
 
-This module aims to provide a friendlier interface when it comes to creating
+This small wrapper aims to provide a friendlier interface when it comes to creating
 nodes using the DOM API.
-If like me, you enjoy chaining stuff and you feel sad when you have to use the DOM API, this library is made for you.
+If like me, you enjoy chaining stuff and you feel sad when you have to use the DOM API, this library is made for you!
 
 ## Limitation
 
@@ -111,12 +112,14 @@ It will create the following HTML tree structure:
 </div>
 ```
 
+I find it personally more elegant.
+
 ## Contributing
 
 Install the dependencies
 
 ```sh
-$ make build
+$ make
 ```
 
 Run the test suite
