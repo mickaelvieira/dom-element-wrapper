@@ -4,3 +4,4 @@ dist
 coverage
 yarn.lock
 .github/.access_token
+npm-debug.log
