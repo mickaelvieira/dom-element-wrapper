@@ -7,7 +7,7 @@
 
 ## Motivation
 
-This thin wrapper (2k) aims to provide a friendlier interface when it comes to creating nodes using the DOM API.
+This thin wrapper (<2k) aims to provide a friendlier interface when it comes to creating nodes using the DOM API.
 
 If like me, you enjoy chaining stuff and you feel sad when you have to use the DOM API, this library is made for you!
 
@@ -75,7 +75,7 @@ const nodes = wrap(element)
 
 We are now able to chain the node's methods! Whoop Whoop!
 
-You still have access to the element's properties, the only difference is: the proxy intercept "setters"  methods that return a _relevant_ result cannot be chained (.i.e such as `querySelector`, `cloneNode`, etc...) as so for methods starting with however methods that returns _irrelevant_ results can be chained (.i.e such as `addEventListener`, `insertBefore`, `appendChild`, etc...).
+You still have access to the element's properties, the only difference is: the proxy intercept "setters"  methods that return a _relevant_ result cannot be chained (.i.e such as `querySelector`, `cloneNode`, etc...) as so for methods starting with `get` `has` or `is` however methods that returns _irrelevant_ results can be chained (.i.e such as `addEventListener`, `insertBefore`, `appendChild`, etc...).
 
 > **What do I call `irrelevant` results?**
 >
