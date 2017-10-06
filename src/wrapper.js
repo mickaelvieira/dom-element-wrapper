@@ -12,22 +12,6 @@ function applyProperties(object, props = {}) {
 }
 
 /**
-* Try to create a node with the value provided
-* otherwise it returns a text node containing the name provided
-*
-* @param {String} value
-*
-* @returns {Node}
-*/
-function tryNodeName(value) {
-  try {
-    return document.createElement(value);
-  } catch (e) {
-    return document.createTextNode(value);
-  }
-}
-
-/**
 * Restore the node as it was before wrapping
 *
 * @param {Node}  node
@@ -81,12 +65,12 @@ export default function(nameOrNode, props = {}) {
   const ownKeys = Object.keys(node);
 
   /**
-   * apply properties
+   * Apply properties
    */
   const element = applyProperties(node, props);
 
   /**
-   * Append a node to an existing node
+   * Append a node to the element
    *
    * @param {String} name
    * @param {Object} props
@@ -95,51 +79,28 @@ export default function(nameOrNode, props = {}) {
    */
   element.appendNode = function(name, props = {}) {
     this.appendChild(applyProperties(document.createElement(name), props));
-    return this;
   };
 
   /**
-   * Append a text node to an existing node
+   * Append a text node to the element
    *
    * @param {String} text
    *
    * @returns {Node}
    */
-  element.appendTextNode = function(text) {
+  element.appendText = function(text) {
     this.appendChild(document.createTextNode(text));
-    return this;
   };
 
   /**
-   * Append a list of wrappers to an existing node
+   * Append a list of wrappers to the element
    *
    * @param {Proxy} wrappers
    *
    * @returns {Node}
    */
   element.appendWrappers = function(...wrappers) {
-    wrappers.map(wrapper => this.appendChild(wrapper.unwrap()));
-    return this;
-  };
-
-  /**
-   * Append multiple nodes to an existing node
-   *
-   * @param {String|Array|Node} children
-   *
-   * @returns {Node}
-   */
-  element.appendChildren = function(...children) {
-    children.map(child => {
-      if (typeof child === "string") {
-        this.appendChild(tryNodeName(child));
-      } else if (Array.isArray(child)) {
-        this.appendNode(child[0], child[1]);
-      } else {
-        this.appendChild(child);
-      }
-    });
-    return this;
+    wrappers.forEach(wrapper => this.appendChild(wrapper.unwrap()));
   };
 
   /**

@@ -1,22 +1,22 @@
-import createWrapper from "../src/createWrapper";
+import wrap from "../src/wrapper";
 
-describe("createWrapper", () => {
+describe("wrap", () => {
   test("can create a node and wrap it", () => {
-    const wrapper = createWrapper("div");
+    const wrapper = wrap("div");
 
     expect(wrapper.nodeType).toBe(Node.ELEMENT_NODE);
     expect(wrapper.nodeName.toLowerCase()).toBe("div");
   });
 
   test("can wrap an existing node", () => {
-    const wrapper = createWrapper(document.createElement("div"));
+    const wrapper = wrap(document.createElement("div"));
 
     expect(wrapper.nodeType).toBe(Node.ELEMENT_NODE);
     expect(wrapper.nodeName.toLowerCase()).toBe("div");
   });
 
   test("revokes the proxy and returns the underlying node", () => {
-    const wrapper = createWrapper("div");
+    const wrapper = wrap("div");
     expect(wrapper.nodeType).toBe(Node.ELEMENT_NODE);
 
     const node = wrapper.unwrap();
@@ -29,7 +29,7 @@ describe("createWrapper", () => {
   });
 
   test("knows its prototypes", () => {
-    const wrapper = createWrapper("div");
+    const wrapper = wrap("div");
     expect(wrapper instanceof EventTarget).toBe(true);
     expect(wrapper instanceof Node).toBe(true);
     expect(wrapper instanceof Element).toBe(true);
@@ -41,39 +41,39 @@ describe("createWrapper", () => {
   });
 
   test("returns the node type", () => {
-    expect(createWrapper("div").nodeType).toBe(Node.ELEMENT_NODE);
+    expect(wrap("div").nodeType).toBe(Node.ELEMENT_NODE);
   });
 
   test("returns the list of child nodes", () => {
-    expect(createWrapper("div").childNodes instanceof NodeList).toBe(true);
+    expect(wrap("div").childNodes instanceof NodeList).toBe(true);
   });
 
   test("returns the list of class names", () => {
-    expect(createWrapper("div").classList instanceof DOMTokenList).toBe(true);
+    expect(wrap("div").classList instanceof DOMTokenList).toBe(true);
   });
 
   test("is chainable", () => {
-    const element = createWrapper("div");
+    const element = wrap("div");
     element
       .setAttribute("id", "my-id")
       .appendChild(document.createElement("p"))
       .appendChild(document.createElement("p"))
-      .appendChildren("div", "div")
+      .addEventListener("mouseover", function() {})
       .appendWrappers(
-        createWrapper("ul").appendWrappers(
-          createWrapper("li").appendTextNode("item 1"),
-          createWrapper("li").appendTextNode("item 2")
+        wrap("ul").appendWrappers(
+          wrap("li").appendText("item 1"),
+          wrap("li").appendText("item 2")
         )
       );
 
     expect(element.hasAttribute("id")).toBe(true);
     expect(element.getAttribute("id")).toBe("my-id");
-    expect(element.childNodes.length).toBe(5);
+    expect(element.childNodes.length).toBe(3);
     expect(element.lastChild.childNodes.length).toBe(2);
   });
 
   test("throws an error when the property or method does not exist", () => {
-    const element = createWrapper("div");
+    const element = wrap("div");
     expect(() => {
       element.whatever_function();
     }).toThrowError('Invalid method or property name "whatever_function"');
@@ -84,7 +84,7 @@ describe("createWrapper", () => {
   });
 
   test("may be build with a set of properties", () => {
-    const element = createWrapper("div", {
+    const element = wrap("div", {
       className: "my-class-name",
       id: "my-element"
     });
@@ -96,18 +96,19 @@ describe("createWrapper", () => {
     expect(element.hasAttribute("class")).toBe(true);
   });
 
-  test("should return of methods starting with get, has, is", () => {
-    const element = createWrapper("div", {
+  test("should return the result of methods starting with get, has, is", () => {
+    const element = wrap("div", {
       className: "my-class-name",
       id: "my-element"
     });
     expect(element.getAttribute("id")).toBe("my-element");
     expect(element.hasAttribute("class")).toBe(true);
+    expect(element.className).toBe("my-class-name");
     expect(element.isEqualNode(element)).toBe(true);
   });
 
   test("should be able to clone a node", () => {
-    const wrapper = createWrapper("div");
+    const wrapper = wrap("div");
     const node2 = wrapper.cloneNode(true);
     const node1 = wrapper.unwrap();
 
@@ -117,7 +118,7 @@ describe("createWrapper", () => {
   });
 
   test("should not intercept whitelisted methods", () => {
-    const wrapper = createWrapper("div").appendNode("p", {
+    const wrapper = wrap("div").appendNode("p", {
       className: "my-class"
     });
 
@@ -138,19 +139,19 @@ describe("createWrapper", () => {
   });
 
   test("appends a text node", () => {
-    const element = createWrapper("div").appendTextNode("hello world");
+    const element = wrap("div").appendText("hello world");
     expect(element.firstChild.nodeType).toBe(Node.TEXT_NODE);
     expect(element.innerHTML).toBe("hello world");
   });
 
   test("appends a node", () => {
-    const element = createWrapper("div").appendNode("p");
+    const element = wrap("div").appendNode("p");
     expect(element.firstChild.nodeType).toBe(Node.ELEMENT_NODE);
     expect(element.firstChild.nodeName.toLowerCase()).toBe("p");
   });
 
   test("appends a node with properties", () => {
-    const element = createWrapper("div").appendNode("p", {
+    const element = wrap("div").appendNode("p", {
       className: "my-css-class"
     });
     expect(element.firstChild.nodeType).toBe(Node.ELEMENT_NODE);
@@ -158,9 +159,9 @@ describe("createWrapper", () => {
     expect(element.firstChild.className).toBe("my-css-class");
   });
 
-  test("appends a proxy element", () => {
-    const element1 = createWrapper("div");
-    const element2 = createWrapper("p");
+  test("appends a wrapper", () => {
+    const element1 = wrap("div");
+    const element2 = wrap("p");
 
     element1.appendWrappers(element2);
 
@@ -169,9 +170,9 @@ describe("createWrapper", () => {
   });
 
   test("appends multiple proxy elements", () => {
-    const element1 = createWrapper("div");
-    const element2 = createWrapper("p");
-    const element3 = createWrapper("span");
+    const element1 = wrap("div");
+    const element2 = wrap("p");
+    const element3 = wrap("span");
 
     element1.appendWrappers(element2, element3);
 
@@ -179,48 +180,20 @@ describe("createWrapper", () => {
     expect(element1.lastChild.nodeName.toLowerCase()).toBe("span");
   });
 
-  test("appends multiple child nodes", () => {
-    const element = createWrapper("div");
-
-    const children = [
-      document.createElement("p"),
-      "here my cool text",
-      "br",
-      ["h1"],
-      ["span", { id: "element-id" }]
-    ];
-
-    element.appendChildren(...children);
-
-    expect(element.firstChild.nodeName.toLowerCase()).toBe("p");
-
-    expect(element.childNodes[1].nodeType).toBe(Node.TEXT_NODE);
-    expect(element.childNodes[1].nodeValue).toBe("here my cool text");
-
-    expect(element.childNodes[2].nodeType).toBe(Node.ELEMENT_NODE);
-    expect(element.childNodes[2].nodeName.toLowerCase()).toBe("br");
-
-    expect(element.childNodes[3].nodeType).toBe(Node.ELEMENT_NODE);
-    expect(element.childNodes[3].nodeName.toLowerCase()).toBe("h1");
-
-    expect(element.lastChild.nodeName.toLowerCase()).toBe("span");
-    expect(element.lastChild.id).toBe("element-id");
-  });
-
   test("restores the node as it was before wrapping", () => {
     const element = document.createElement("div");
     element.custom1 = "hello";
 
-    const wrapper = createWrapper(element);
+    const wrapper = wrap(element);
     wrapper.custom2 = function() {};
 
     const node = wrapper.unwrap();
 
     expect(node.unwrap).toBeUndefined();
-    expect(node.appendNode).toBeUndefined();
-    expect(node.appendTextNode).toBeUndefined();
-    expect(node.appendWrappers).toBeUndefined();
-    expect(node.appendChildren).toBeUndefined();
+    expect(node.node).toBeUndefined();
+    expect(node.text).toBeUndefined();
+    expect(node.wrappers).toBeUndefined();
+    expect(node.inject).toBeUndefined();
     expect(
       (function() {
         return node.custom1;
@@ -233,7 +206,7 @@ describe("createWrapper", () => {
     const node = document.createElement("div");
     node.custom1 = function() {};
 
-    const wrapper = createWrapper(node);
+    const wrapper = wrap(node);
     node.custom2 = function() {};
 
     wrapper.custom3 = "value";

@@ -9,6 +9,7 @@ ESLINT     := @eslint --quiet -c .eslintrc
 PRETTIER   := @prettier --write
 ROLLUP     := @rollup -c rollup.config.js
 JEST       := @NODE_ENV=test jest --config=jest.json
+SHELLCHECK := shellcheck -x -e SC1090,SC1091,SC2155
 
 .PHONY: all clean install build watch lint fmt test test-watch test-coverage test-coveralls branch release
 
@@ -28,10 +29,14 @@ watch:
 
 lint:
 	$(ESLINT) $(SOURCE_DIR)
+	@for file in create-branch create-release; do \
+		$(SHELLCHECK) "bin/$$file" || (echo "File bin/$$file has errors!"; exit 1) \
+	done
 
 fmt:
 	$(PRETTIER) ./src/*.js
 	$(PRETTIER) ./spec/*.js
+	$(PRETTIER) ./examples/*.js
 	$(PRETTIER) rollup.config.js
 
 test:

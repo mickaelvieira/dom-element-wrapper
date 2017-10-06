@@ -7,8 +7,8 @@
 
 ## Motivation
 
-This small wrapper aims to provide a friendlier interface when it comes to creating
-nodes using the DOM API.
+This thin wrapper (2k) aims to provide a friendlier interface when it comes to creating nodes using the DOM API.
+
 If like me, you enjoy chaining stuff and you feel sad when you have to use the DOM API, this library is made for you!
 
 ## Limitation
@@ -30,64 +30,104 @@ $ yarn add dom-element-wrapper
 
 ## Usage
 
-Instead of writing this:
+The DOM API is extremely verbose and the way it was designed makes it very difficult to keep your code concise.
+
+For instance, adding a single node to an existing one.
+
+```js
+const element1 = document.querySelector(".my-container");
+const element2 = document.createElement("div");
+element2.id = "element-id";
+element2.className = "css-class";
+
+element1.appendChild(element2);
+```
+
+This can be replaced with the following syntax
+
+```js
+import { wrap } from "dom-element-wrapper";
+
+let element = document.querySelector(".my-container");
+
+element = wrap(element)
+  .appendNode("div", {
+    id: "element-id",
+    className: "css-class"
+  });
+```
+
+The cool thing is you still have access to the underlying node, so you can do something like this:
+
+```js
+import { wrap } from "dom-element-wrapper";
+
+const nodes = wrap(element)
+  .appendNode("div", {
+    id: "element-id",
+    className: "css-class"
+  })
+  .setAttribute("title", "Element's title")
+  .addEventListener("mouseover", handler)
+  .appendChild(document.createElement("div"))
+  .childNodes;
+```
+
+We are now able to chain the node's methods! Whoop Whoop!
+
+You still have access to the element's properties, the only difference is: the proxy intercept "setters"  methods that return a _relevant_ result cannot be chained (.i.e such as `querySelector`, `cloneNode`, etc...) as so for methods starting with however methods that returns _irrelevant_ results can be chained (.i.e such as `addEventListener`, `insertBefore`, `appendChild`, etc...).
+
+> **What do I call `irrelevant` results?**
+>
+> For example, the method `appendChild` will return the appended node.
+> Who cares really? This is typically what I call an `irrelevant` result.
+
+But wait a minute, what if we want to build a DOM structure a bit more complicated?
+
+Well for instance, instead of writing this:
 
 ```js
 const element = document.createElement("div");
-element.id = "element-id";
+element.className = "nice-stuff";
 
 const div = document.createElement("div");
 const p = document.createElement("p");
 
-p.appendChild(document.createTextNode("Lorem ipsum"));
+p.appendChild(document.createTextNode("List of stuff"));
 div.appendChild(p);
 
 element.appendChild(div);
 
 const ul = document.createElement("ul");
 
-const li1 = document.createElement("li");
-li1.appendChild(document.createTextNode("item 1"));
-ul.appendChild(li1);
+const entries = ["Stuff 1", "Stuff 2", "Stuff 3", "Stuff 4"];
 
-const li2 = document.createElement("li");
-li2.appendChild(document.createTextNode("item 2"));
-ul.appendChild(li2);
-
-const li3 = document.createElement("li");
-li3.appendChild(document.createTextNode("item 3"));
-ul.appendChild(li3);
-
-const li4 = document.createElement("li");
-li4.appendChild(document.createTextNode("item 4"));
-ul.appendChild(li4);
-
-const li5 = document.createElement("li");
-li5.appendChild(document.createTextNode("item 5"));
-ul.appendChild(li5);
+entries.forEach(function(entry) {
+  const li = document.createElement("li");
+  li.appendChild(document.createTextNode(entry));
+  ul.appendChild(li);
+});
 
 element.appendChild(ul);
 
 document.querySelector("body").appendChild(element);
 ```
 
-you can simply write that:
+you can simply write something like that:
 
 ```js
-import { createWrapper } from "dom-element-wrapper";
+import { wrap } from "dom-element-wrapper";
 
-const element = createWrapper("div")
-  .setAttribute("id", "element-id")
+const entries = ["Stuff 1", "Stuff 2", "Stuff 3", "Stuff 4"];
+const items = entries.map(entry => wrap("li").appendText(entry));
+
+const element = wrap("div", { className: "nice-stuff" })
   .appendWrappers(
-    createWrapper("div").appendWrappers(
-      createWrapper("p").appendTextNode("Lorem ipsum")
+    wrap("div").appendWrappers(
+      wrap("p").appendText("List of stuff")
     ),
-    createWrapper("ul").appendWrappers(
-      createWrapper("li").appendTextNode("item 1"),
-      createWrapper("li").appendTextNode("item 2"),
-      createWrapper("li").appendTextNode("item 3"),
-      createWrapper("li").appendTextNode("item 4"),
-      createWrapper("li").appendTextNode("item 5")
+    wrap("ul").appendWrappers(
+      ...items
     )
   )
   .unwrap();
@@ -95,24 +135,104 @@ const element = createWrapper("div")
 document.querySelector("body").appendChild(element);
 ```
 
-It will create the following HTML tree structure:
+Both will create the same result.
 
 ```html
-<div id="element-id">
+<div class="nice-stuff">
   <div>
-    <p>Lorem ipsum</p>
+    <p>List of stuff</p>
   </div>
   <ul>
-    <li>item 1</li>
-    <li>item 2</li>
-    <li>item 3</li>
-    <li>item 4</li>
-    <li>item 5</li>
+    <li>Stuff 1</li>
+    <li>Stuff 2</li>
+    <li>Stuff 3</li>
+    <li>Stuff 4</li>
   </ul>
 </div>
 ```
 
-I find it personally more elegant.
+**So what is this `unwrap` method all about?**
+
+When we wrap the DOM element by calling `wrap`, the element is being wrapped within a `proxy` object but if we try to append this proxy to a DOM element, it will fail. We need to revoke the proxy to reveal the underlying object, this is exactly what `unwrap` does.
+
+It is worth noting that you only need to call `unwrap` when you need to pass the element to a method that expects a actual DOM element. If you only need to manipulate the element, unwrapping is not necessary.
+
+## API
+
+#### Create a wrapper
+
+Create the node and wrap it
+
+```js
+const element = wrap("div", { id: "my-id" });
+```
+
+```html
+<div id="my-id"></div>
+```
+
+Wrap an existing node
+
+```js
+const element = wrap(document.querySelector(".container"), {
+  id: "my-id"
+});
+```
+
+```html
+<div class="container" id="my-id"></div>
+```
+
+#### Append a single node
+
+```js
+const element = wrap("div").appendNode("div", {
+  id: "my-id",
+  className: "my-style"
+});
+```
+
+```html
+<div>
+  <div id="my-id" class="my-style"></div>
+</div>
+```
+
+#### Append a text
+
+```js
+const element = wrap("div").appendText("Hello world"));
+```
+
+```html
+<div>
+  Hello world
+</div>
+```
+
+#### Add one or multiple wrappers
+
+```js
+const element = wrap("div").appendWrappers(
+  wrap("h1"),
+  wrap("h2"),
+  wrap("p")
+);
+```
+
+```html
+<div>
+  <h1></h1>
+  <h2></h2>
+  <p></p>
+</div>
+```
+
+#### Reveal underlying node
+
+```js
+const element = wrap("div").unwrap();
+```
 
 ## Contributing
 
