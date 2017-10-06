@@ -120,25 +120,6 @@ export default function(nameOrNode, props = {}) {
   };
 
   /**
-   * Append multiple nodes to the element
-   *
-   * @param {String|Array|Node} children
-   *
-   * @returns {Node}
-   */
-  element.inject = function(...children) {
-    children.forEach(child => {
-      if (typeof child === "string") {
-        this.appendChild(tryNodeName(child));
-      } else if (Array.isArray(child)) {
-        this.appendNode(child[0], child[1]);
-      } else {
-        this.appendChild(child);
-      }
-    });
-  };
-
-  /**
    * Revoke the proxy and restore the underlying node and return it
    *
    * @returns {Node}

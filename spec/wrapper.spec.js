@@ -59,7 +59,6 @@ describe("wrap", () => {
       .appendChild(document.createElement("p"))
       .appendChild(document.createElement("p"))
       .addEventListener("mouseover", function() {})
-      .inject("div", "div")
       .appendWrappers(
         wrap("ul").appendWrappers(
           wrap("li").appendText("item 1"),
@@ -69,7 +68,7 @@ describe("wrap", () => {
 
     expect(element.hasAttribute("id")).toBe(true);
     expect(element.getAttribute("id")).toBe("my-id");
-    expect(element.childNodes.length).toBe(5);
+    expect(element.childNodes.length).toBe(3);
     expect(element.lastChild.childNodes.length).toBe(2);
   });
 
@@ -179,34 +178,6 @@ describe("wrap", () => {
 
     expect(element1.firstChild.nodeName.toLowerCase()).toBe("p");
     expect(element1.lastChild.nodeName.toLowerCase()).toBe("span");
-  });
-
-  test("appends multiple child nodes", () => {
-    const element = wrap("div");
-
-    const children = [
-      document.createElement("p"),
-      "here my cool text",
-      "br",
-      ["h1"],
-      ["span", { id: "element-id" }]
-    ];
-
-    element.inject(...children);
-
-    expect(element.firstChild.nodeName.toLowerCase()).toBe("p");
-
-    expect(element.childNodes[1].nodeType).toBe(Node.TEXT_NODE);
-    expect(element.childNodes[1].nodeValue).toBe("here my cool text");
-
-    expect(element.childNodes[2].nodeType).toBe(Node.ELEMENT_NODE);
-    expect(element.childNodes[2].nodeName.toLowerCase()).toBe("br");
-
-    expect(element.childNodes[3].nodeType).toBe(Node.ELEMENT_NODE);
-    expect(element.childNodes[3].nodeName.toLowerCase()).toBe("h1");
-
-    expect(element.lastChild.nodeName.toLowerCase()).toBe("span");
-    expect(element.lastChild.id).toBe("element-id");
   });
 
   test("restores the node as it was before wrapping", () => {

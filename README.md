@@ -7,8 +7,7 @@
 
 ## Motivation
 
-This thin wrapper aims to provide a friendlier interface when it comes to creating nodes using the DOM API.
-
+This thin wrapper (2k) aims to provide a friendlier interface when it comes to creating nodes using the DOM API.
 
 If like me, you enjoy chaining stuff and you feel sad when you have to use the DOM API, this library is made for you!
 
@@ -190,7 +189,7 @@ const element = wrap("div").appendNode("div", {
 ```
 
 ```html
-<div class="container">
+<div>
   <div id="my-id" class="my-style"></div>
 </div>
 ```
@@ -230,7 +229,6 @@ const element = wrap("div").appendWrappers(
 ```js
 const element = wrap("div").unwrap();
 ```
-
 
 ## Contributing
 
