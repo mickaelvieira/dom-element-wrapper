@@ -60,9 +60,7 @@ element = wrap(element)
 But the cool thing is you still have access to the underlying node, so you can do something like this:
 
 ```js
-const element = document.querySelector(".my-container");
-
-const nodes = wrap(element)
+const nodes = wrap("div")
   .appendNode("div", {
     id: "element-id",
     className: "css-class"
@@ -75,11 +73,11 @@ const nodes = wrap(element)
 
 So basically by wrapping the DOM element, we get back a DOM element on steroids.
 
-You still have access to the element properties, the only difference is: methods that return a "relevant" result cannot be chained (.i.e such as `querySelector`, `cloneNode`, etc...) however methods that returns "irrelevant" results can be chained (.i.e such as `addEventListener`, `insertBefore`, `appendChild`, etc...).
+You still have access to the element properties, the only difference is: methods that return a _relevant_ result cannot be chained (.i.e such as `querySelector`, `cloneNode`, etc...) however methods that returns _irrelevant_ results can be chained (.i.e such as `addEventListener`, `insertBefore`, `appendChild`, etc...).
 
-**What do I call `irrelevant` results?**
-
-For example, a method such as `appendChild` will return the appended node. Who cares really? This is typically what I call an `irrelevant` result.
+> **NOTE: What do I call `irrelevant` results?**
+>
+> For example, a method such as `appendChild` will return the appended node. Who > cares really? This is typically what I call an `irrelevant` result.
 
 But wait a minute, what if I want to build a DOM structure a bit more complicated you might ask.
 
@@ -115,7 +113,7 @@ document.querySelector("body").appendChild(element);
 you can simply write that:
 
 ```js
-import { createWrapper } from "dom-element-wrapper";
+import { wrap } from "dom-element-wrapper";
 
 const entries = ["item 1", "item 2", "item 3", "item 4"];
 const items = entries.map(entry => wrap("li").appendText(entry));
@@ -185,27 +183,14 @@ const element = wrap("div").appendText("Hello world"));
 </div>
 ```
 
-#### Add a wrapper
+#### Add one or multiple wrappers
 
 ```js
-const element = wrap("div").appendWrapper(wrap("div"));
-```
-
-```html
-<div>
-  <div></div>
-</div>
-```
-
-#### Add multiple wrappers
-
-```js
-const element = wrap("div")
-  .appendWrappers(
-    wrap("h1"),
-    wrap("h2"),
-    wrap("p")
-  );
+const element = wrap("div").appendWrappers(
+  wrap("h1"),
+  wrap("h2"),
+  wrap("p")
+);
 ```
 
 ```html
@@ -215,6 +200,13 @@ const element = wrap("div")
   <p></p>
 </div>
 ```
+
+#### Reveal underlying node
+
+```js
+const element = wrap("div").unwrap();
+```
+
 
 ## Contributing
 
