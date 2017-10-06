@@ -109,17 +109,6 @@ export default function(nameOrNode, props = {}) {
   };
 
   /**
-   * Append a wrapper to the element
-   *
-   * @param {Proxy} wrapper
-   *
-   * @returns {Node}
-   */
-  element.appendWrapper = function(wrapper) {
-    this.appendChild(wrapper.unwrap());
-  };
-
-  /**
    * Append a list of wrappers to the element
    *
    * @param {Proxy} wrappers
@@ -127,7 +116,7 @@ export default function(nameOrNode, props = {}) {
    * @returns {Node}
    */
   element.appendWrappers = function(...wrappers) {
-    wrappers.forEach(wrapper => this.appendWrapper(wrapper));
+    wrappers.forEach(wrapper => this.appendChild(wrapper.unwrap()));
   };
 
   /**

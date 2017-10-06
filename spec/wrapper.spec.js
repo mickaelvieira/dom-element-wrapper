@@ -1,4 +1,4 @@
-import wrap from "../src/createWrapper";
+import wrap from "../src/wrapper";
 
 describe("wrap", () => {
   test("can create a node and wrap it", () => {

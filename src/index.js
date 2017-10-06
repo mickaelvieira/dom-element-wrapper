@@ -1,3 +1,3 @@
-import wrap from "./createWrapper";
+import wrap from "./wrapper";
 
 export { wrap };

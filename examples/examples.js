@@ -14,7 +14,7 @@ function form_example() {
       console.log(event);
     })
     .appendWrappers(
-      wrap("div", { className: "form-group" }).appendWrapper(
+      wrap("div", { className: "form-group" }).appendWrappers(
         wrap("input", {
           type: "text",
           id: "username",
@@ -22,7 +22,7 @@ function form_example() {
           className: "form-control"
         })
       ),
-      wrap("div", { className: "form-group" }).appendWrapper(
+      wrap("div", { className: "form-group" }).appendWrappers(
         wrap("input", {
           type: "text",
           id: "password",
