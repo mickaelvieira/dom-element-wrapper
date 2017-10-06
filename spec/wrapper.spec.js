@@ -58,6 +58,7 @@ describe("wrap", () => {
       .setAttribute("id", "my-id")
       .appendChild(document.createElement("p"))
       .appendChild(document.createElement("p"))
+      .addEventListener("mouseover", function() {})
       .inject("div", "div")
       .appendWrappers(
         wrap("ul").appendWrappers(
@@ -96,13 +97,14 @@ describe("wrap", () => {
     expect(element.hasAttribute("class")).toBe(true);
   });
 
-  test("should return of methods starting with get, has, is", () => {
+  test("should return the result of methods starting with get, has, is", () => {
     const element = wrap("div", {
       className: "my-class-name",
       id: "my-element"
     });
     expect(element.getAttribute("id")).toBe("my-element");
     expect(element.hasAttribute("class")).toBe(true);
+    expect(element.className).toBe("my-class-name");
     expect(element.isEqualNode(element)).toBe(true);
   });
 
@@ -158,7 +160,7 @@ describe("wrap", () => {
     expect(element.firstChild.className).toBe("my-css-class");
   });
 
-  test("appends a proxy element", () => {
+  test("appends a wrapper", () => {
     const element1 = wrap("div");
     const element2 = wrap("p");
 
