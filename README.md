@@ -30,7 +30,7 @@ $ yarn add dom-element-wrapper
 
 ## Usage
 
-The DOM API is extremely verbose and because of the way it has been designed it makes it very difficult to keep your code concise.
+The DOM API is extremely verbose and the way it was designed makes it very difficult to keep your code concise.
 
 For instance, adding a single node to an existing one.
 
@@ -46,6 +46,8 @@ element1.appendChild(element2);
 This can be replaced with the following syntax
 
 ```js
+import { wrap } from "dom-element-wrapper";
+
 let element = document.querySelector(".my-container");
 
 element = wrap(element)
@@ -55,9 +57,11 @@ element = wrap(element)
   });
 ```
 
-But the cool thing is you still have access to the underlying node, so you can do something like this:
+The cool thing is you still have access to the underlying node, so you can do something like this:
 
 ```js
+import { wrap } from "dom-element-wrapper";
+
 const nodes = wrap(element)
   .appendNode("div", {
     id: "element-id",
