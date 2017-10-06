@@ -7,8 +7,7 @@
 
 ## Motivation
 
-This thin wrapper aims to provide a friendlier interface when it comes to creating
-nodes using the DOM API.
+This thin wrapper aims to provide a friendlier interface when it comes to creating nodes using the DOM API.
 
 
 If like me, you enjoy chaining stuff and you feel sad when you have to use the DOM API, this library is made for you!
@@ -60,7 +59,7 @@ element = wrap(element)
 But the cool thing is you still have access to the underlying node, so you can do something like this:
 
 ```js
-const nodes = wrap("div")
+const nodes = wrap(element)
   .appendNode("div", {
     id: "element-id",
     className: "css-class"
@@ -71,34 +70,34 @@ const nodes = wrap("div")
   .childNodes;
 ```
 
-So basically by wrapping the DOM element, we get back a DOM element on steroids.
+We are now able to chain the node's methods! Whoop Whoop!
 
-You still have access to the element properties, the only difference is: methods that return a _relevant_ result cannot be chained (.i.e such as `querySelector`, `cloneNode`, etc...) however methods that returns _irrelevant_ results can be chained (.i.e such as `addEventListener`, `insertBefore`, `appendChild`, etc...).
+You still have access to the element's properties, the only difference is: the proxy intercept "setters"  methods that return a _relevant_ result cannot be chained (.i.e such as `querySelector`, `cloneNode`, etc...) as so for methods starting with however methods that returns _irrelevant_ results can be chained (.i.e such as `addEventListener`, `insertBefore`, `appendChild`, etc...).
 
 > **What do I call `irrelevant` results?**
 >
-> For example, a method such as `appendChild` will return the appended node.
+> For example, the method `appendChild` will return the appended node.
 > Who cares really? This is typically what I call an `irrelevant` result.
 
-But wait a minute, what if I want to build a DOM structure a bit more complicated you might ask.
+But wait a minute, what if we want to build a DOM structure a bit more complicated?
 
 Well for instance, instead of writing this:
 
 ```js
 const element = document.createElement("div");
-element.id = "element-id";
+element.className = "nice-stuff";
 
 const div = document.createElement("div");
 const p = document.createElement("p");
 
-p.appendChild(document.createTextNode("Lorem ipsum"));
+p.appendChild(document.createTextNode("List of stuff"));
 div.appendChild(p);
 
 element.appendChild(div);
 
 const ul = document.createElement("ul");
 
-const entries = ["item 1", "item 2", "item 3", "item 4"];
+const entries = ["Stuff 1", "Stuff 2", "Stuff 3", "Stuff 4"];
 
 entries.forEach(function(entry) {
   const li = document.createElement("li");
@@ -111,18 +110,18 @@ element.appendChild(ul);
 document.querySelector("body").appendChild(element);
 ```
 
-you can simply write that:
+you can simply write something like that:
 
 ```js
 import { wrap } from "dom-element-wrapper";
 
-const entries = ["item 1", "item 2", "item 3", "item 4"];
+const entries = ["Stuff 1", "Stuff 2", "Stuff 3", "Stuff 4"];
 const items = entries.map(entry => wrap("li").appendText(entry));
 
-const element = wrap("div", { id: "element-id" })
+const element = wrap("div", { className: "nice-stuff" })
   .appendWrappers(
     wrap("div").appendWrappers(
-      wrap("p").appendText("Lorem ipsum")
+      wrap("p").appendText("List of stuff")
     ),
     wrap("ul").appendWrappers(
       ...items
@@ -133,27 +132,27 @@ const element = wrap("div", { id: "element-id" })
 document.querySelector("body").appendChild(element);
 ```
 
-Both will create the following HTML tree structure but the latter is much shorter.
+Both will create the same result.
 
 ```html
-<div id="element-id">
+<div class="nice-stuff">
   <div>
-    <p>Lorem ipsum</p>
+    <p>List of stuff</p>
   </div>
   <ul>
-    <li>item 1</li>
-    <li>item 2</li>
-    <li>item 3</li>
-    <li>item 4</li>
+    <li>Stuff 1</li>
+    <li>Stuff 2</li>
+    <li>Stuff 3</li>
+    <li>Stuff 4</li>
   </ul>
 </div>
 ```
 
 **So what is this `unwrap` method all about?**
 
-When we wrap the DOM element when calling `wrap`, the element is being wrapped within a `proxy` object but if we try to append this proxy to a DOM element, it will fail. We need to revoke the proxy to reveal the underlying object, this is exactly what `unwrap` does.
+When we wrap the DOM element by calling `wrap`, the element is being wrapped within a `proxy` object but if we try to append this proxy to a DOM element, it will fail. We need to revoke the proxy to reveal the underlying object, this is exactly what `unwrap` does.
 
-It is worth noting that you only need to call `unwrap` when you need to pass the element to a method that expects a actual DOM element. If you only need to manipulate an element, unwrapping is not necessary.
+It is worth noting that you only need to call `unwrap` when you need to pass the element to a method that expects a actual DOM element. If you only need to manipulate the element, unwrapping is not necessary.
 
 ## API
 
