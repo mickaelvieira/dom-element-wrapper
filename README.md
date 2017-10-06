@@ -75,9 +75,10 @@ So basically by wrapping the DOM element, we get back a DOM element on steroids.
 
 You still have access to the element properties, the only difference is: methods that return a _relevant_ result cannot be chained (.i.e such as `querySelector`, `cloneNode`, etc...) however methods that returns _irrelevant_ results can be chained (.i.e such as `addEventListener`, `insertBefore`, `appendChild`, etc...).
 
-> **NOTE: What do I call `irrelevant` results?**
+> **What do I call `irrelevant` results?**
 >
-> For example, a method such as `appendChild` will return the appended node. Who > cares really? This is typically what I call an `irrelevant` result.
+> For example, a method such as `appendChild` will return the appended node.
+> Who cares really? This is typically what I call an `irrelevant` result.
 
 But wait a minute, what if I want to build a DOM structure a bit more complicated you might ask.
 
@@ -150,28 +151,52 @@ Both will create the following HTML tree structure but the latter is much shorte
 
 **So what is this `unwrap` method all about?**
 
-When we wrap the DOM element when calling `wrap`, the element is being wrapped within a `proxy` object but if we try to append this proxy to a DOM element, it will fail so we need to revoke the proxy to release the underlying object, that is what `unwrap` does.
+When we wrap the DOM element when calling `wrap`, the element is being wrapped within a `proxy` object but if we try to append this proxy to a DOM element, it will fail. We need to revoke the proxy to reveal the underlying object, this is exactly what `unwrap` does.
 
 It is worth noting that you only need to call `unwrap` when you need to pass the element to a method that expects a actual DOM element. If you only need to manipulate an element, unwrapping is not necessary.
 
 ## API
 
-#### Add a single node
+#### Create a wrapper
+
+Create the node and wrap it
+
+```js
+const element = wrap("div", { id: "my-id" });
+```
+
+```html
+<div id="my-id"></div>
+```
+
+Wrap an existing node
+
+```js
+const element = wrap(document.querySelector(".container"), {
+  id: "my-id"
+});
+```
+
+```html
+<div class="container" id="my-id"></div>
+```
+
+#### Append a single node
 
 ```js
 const element = wrap("div").appendNode("div", {
-  id: "id",
-  className: "class"
+  id: "my-id",
+  className: "my-style"
 });
 ```
 
 ```html
 <div class="container">
-  <div id="id" class="class"></div>
+  <div id="my-id" class="my-style"></div>
 </div>
 ```
 
-#### Add a text
+#### Append a text
 
 ```js
 const element = wrap("div").appendText("Hello world"));

@@ -1,8 +1,8 @@
 "use strict";
 
-function form_example() {
-  const wrap = DOMElementWrapper.wrap;
+const wrap = DOMElementWrapper.wrap;
 
+function form_example() {
   const form = wrap("form", {
     id: "my-form",
     action: "https://example.local",
