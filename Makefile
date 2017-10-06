@@ -36,6 +36,7 @@ lint:
 fmt:
 	$(PRETTIER) ./src/*.js
 	$(PRETTIER) ./spec/*.js
+	$(PRETTIER) ./examples/*.js
 	$(PRETTIER) rollup.config.js
 
 test:
