@@ -12,22 +12,6 @@ function applyProperties(object, props = {}) {
 }
 
 /**
-* Try to create a node with the value provided
-* otherwise it returns a text node containing the name provided
-*
-* @param {String} value
-*
-* @returns {Node}
-*/
-function tryNodeName(value) {
-  try {
-    return document.createElement(value);
-  } catch (e) {
-    return document.createTextNode(value);
-  }
-}
-
-/**
 * Restore the node as it was before wrapping
 *
 * @param {Node}  node
