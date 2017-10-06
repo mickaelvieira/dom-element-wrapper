@@ -81,12 +81,12 @@ export default function(nameOrNode, props = {}) {
   const ownKeys = Object.keys(node);
 
   /**
-   * apply properties
+   * Apply properties
    */
   const element = applyProperties(node, props);
 
   /**
-   * Append a node to an existing node
+   * Append a node to the element
    *
    * @param {String} name
    * @param {Object} props
@@ -95,42 +95,50 @@ export default function(nameOrNode, props = {}) {
    */
   element.appendNode = function(name, props = {}) {
     this.appendChild(applyProperties(document.createElement(name), props));
-    return this;
   };
 
   /**
-   * Append a text node to an existing node
+   * Append a text node to the element
    *
    * @param {String} text
    *
    * @returns {Node}
    */
-  element.appendTextNode = function(text) {
+  element.appendText = function(text) {
     this.appendChild(document.createTextNode(text));
-    return this;
   };
 
   /**
-   * Append a list of wrappers to an existing node
+   * Append a wrapper to the element
+   *
+   * @param {Proxy} wrapper
+   *
+   * @returns {Node}
+   */
+  element.appendWrapper = function(wrapper) {
+    this.appendChild(wrapper.unwrap());
+  };
+
+  /**
+   * Append a list of wrappers to the element
    *
    * @param {Proxy} wrappers
    *
    * @returns {Node}
    */
   element.appendWrappers = function(...wrappers) {
-    wrappers.map(wrapper => this.appendChild(wrapper.unwrap()));
-    return this;
+    wrappers.forEach(wrapper => this.appendWrapper(wrapper));
   };
 
   /**
-   * Append multiple nodes to an existing node
+   * Append multiple nodes to the element
    *
    * @param {String|Array|Node} children
    *
    * @returns {Node}
    */
-  element.appendChildren = function(...children) {
-    children.map(child => {
+  element.inject = function(...children) {
+    children.forEach(child => {
       if (typeof child === "string") {
         this.appendChild(tryNodeName(child));
       } else if (Array.isArray(child)) {
@@ -139,7 +147,6 @@ export default function(nameOrNode, props = {}) {
         this.appendChild(child);
       }
     });
-    return this;
   };
 
   /**

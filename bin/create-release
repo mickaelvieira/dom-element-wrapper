@@ -16,11 +16,11 @@ error() {
 }
 
 get_version() {
-  local version
-  if [[ -f "$PACKAGE_FILE" ]]; then
-      version=$(grep -E "version" "$PACKAGE_FILE" | grep -Eo "([\.0-9]+)")
-  fi
-  echo "$version"
+    local version
+    if [[ -f "$PACKAGE_FILE" ]]; then
+        version=$(grep -E "version" "$PACKAGE_FILE" | grep -Eo "([\.0-9]+)")
+    fi
+    echo "$version"
 }
 
 get_branch() {
@@ -50,7 +50,7 @@ get_confirmation_message() {
     local branch=$1
     local version=$2
 
-  cat <<EOM
+    cat <<EOM
 You are about to create a new release:
 - Branch: \x1b[33m${branch}\x1b[0m
 - Version: \x1b[33m${version}\x1b[0m

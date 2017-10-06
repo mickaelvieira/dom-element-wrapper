@@ -16,11 +16,11 @@ error() {
 }
 
 get_version() {
-  local version
-  if [[ -f "$PACKAGE_FILE" ]]; then
-      version=$(grep -E "version" "$PACKAGE_FILE" | grep -Eo "([\.0-9]+)")
-  fi
-  echo "$version"
+    local version
+    if [[ -f "$PACKAGE_FILE" ]]; then
+        version=$(grep -E "version" "$PACKAGE_FILE" | grep -Eo "([\.0-9]+)")
+    fi
+    echo "$version"
 }
 
 get_branch() {

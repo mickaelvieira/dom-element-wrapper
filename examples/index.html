@@ -8,40 +8,63 @@
     <script src="../dist/dom-element-wrapper.js"></script>
     <script>
     window.addEventListener("DOMContentLoaded", function () {
-      const createWrapper = DOMElementWrapper.createWrapper;
-      const element1 = createWrapper("div")
+      const wrap = DOMElementWrapper.wrap;
+
+      const items = ["Cat", "Dog", "Wolf"].map(name => wrap("li").appendText(name));
+
+      const element1 = wrap("div")
         .setAttribute("id", "element-id")
         .appendWrappers(
-          createWrapper("div").appendWrappers(
-            createWrapper("p").appendTextNode("Lorem ipsum")
+          wrap("div").appendWrappers(
+            wrap("h2").appendText("Animals")
           ),
-          createWrapper("ul").appendWrappers(
-            createWrapper("li").appendTextNode("item 1"),
-            createWrapper("li").appendTextNode("item 2"),
-            createWrapper("li").appendTextNode("item 3"),
-            createWrapper("li").appendTextNode("item 4"),
-            createWrapper("li").appendTextNode("item 5")
-          )
+          wrap("ul").appendWrappers(...items)
         )
         .unwrap();
 
-      const element2 = createWrapper("div", { style: "padding: 12px; background-color: grey" })
-        .appendWrappers(
-          createWrapper("input", { type: "button", value: "Click me" })
-            .addEventListener("click", function handler(event) {
-              alert("clicked!");
-            })
-        )
+      const button = wrap("input", {
+        type: "button",
+        value: "Click me",
+        class: "btn"
+      })
+      .addEventListener("click", function(event) {
+        console.log("clicked!");
+      })
+      .addEventListener("mouseover", function(event) {
+        console.log("mouseover!");
+      })
+      .addEventListener("mouseout", function(event) {
+        console.log("mouseout!");
+      });
+
+      const element2 = wrap("div", {
+          className: "container"
+        })
+        .appendWrapper(button)
         .setAttribute("id", "element-id-2")
         .unwrap();
 
-      const body = createWrapper(document.querySelector("body"))
+      let body = document.querySelector("body");
+
+      body = wrap(body)
         .appendChild(element1)
         .appendChild(element2);
+
+      const container = document.querySelector(".element");
+
+      const oldTitle = container.querySelector("h1");
+      const newTitle = wrap("h1").appendText("World");
+
+      const element3 = wrap(container)
+        .removeChild(oldTitle)
+        .appendWrapper(newTitle);
     });
     </script>
   </head>
   <body>
+    <div class="element">
+      <h1>Hello</h1>
+    </div>
 
   </body>
 </html>

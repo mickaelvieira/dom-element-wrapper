@@ -1,3 +1,3 @@
-import createWrapper from "./createWrapper";
+import wrap from "./createWrapper";
 
-export { createWrapper };
+export { wrap };
