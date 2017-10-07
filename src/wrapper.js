@@ -1,24 +1,26 @@
 import whiteList from "./whiteList";
 
 /**
-* @param {Object} object
-* @param {Object} props
-*
-* @returns {Object}
-*/
+ * @param {Object} object
+ * @param {Object} props
+ *
+ * @returns {Object}
+ */
 function applyProperties(object, props = {}) {
-  Object.keys(props).forEach(prop => (object[prop] = props[prop]));
+  Object.keys(props).forEach(prop => {
+    object[prop] = props[prop];
+  });
   return object;
 }
 
 /**
-* Restore the node as it was before wrapping
-*
-* @param {Node}  node
-* @param {Array} privKeys
-*
-* @returns {Node}
-*/
+ * Restore the node as it was before wrapping
+ *
+ * @param {Node}  node
+ * @param {Array} privKeys
+ *
+ * @returns {Node}
+ */
 function restore(node, privKeys) {
   Object.keys(node)
     .filter(prop => privKeys.indexOf(prop) >= 0)
@@ -27,84 +29,120 @@ function restore(node, privKeys) {
 }
 
 /**
-* @param {String} name
-*
-* @returns {Boolean}
-*/
+ * Do not hijack methods with name matching these rules
+ *
+ * @param {String} name
+ *
+ * @returns {Boolean}
+ */
 function doesMethodReturnRelevantValue(name) {
   return /^(get|has|is)/.test(name) || whiteList.indexOf(name) >= 0;
 }
 
 /**
-* @param {Array} subject
-* @param {Array} excluded
-*
-* @returns {Array}
-*/
+ * @param {Array} subject
+ * @param {Array} excluded
+ *
+ * @returns {Array}
+ */
 function excludeValues(subject, excluded) {
   return subject.filter(value => excluded.indexOf(value) === -1);
 }
 
 /**
-* Create and wrap an Element in order to chain its methods
-*
-* @param {String|Node} nameOrNode
-* @param {Object}      props
-*
-* @returns {Proxy}
-*/
-export default function(nameOrNode, props = {}) {
+ * @param {Node} target
+ * @param {Node} child
+ */
+function prependNode(target, child) {
+  if (!target.firstChild) {
+    target.appendChild(child);
+  } else {
+    target.insertBefore(child, target.firstChild);
+  }
+}
+
+/**
+ * Creates and wraps a node in order to chain its methods
+ *
+ * @param {String|Node} nameOrNode
+ * @param {Object}      props
+ *
+ * @returns {Proxy}
+ */
+export default function(nameOrNode, props) {
   const node =
     typeof nameOrNode === "string"
       ? document.createElement(nameOrNode)
       : nameOrNode;
 
   /**
-   * Cache object enumerable properties
+   * Caches object enumerable properties
    */
   const ownKeys = Object.keys(node);
 
   /**
-   * Apply properties
+   * Applies properties
    */
   const element = applyProperties(node, props);
 
   /**
-   * Append a node to the element
+   * Prepends a node to the element
    *
    * @param {String} name
    * @param {Object} props
-   *
-   * @returns {Node}
    */
-  element.appendNode = function(name, props = {}) {
+  element.prependNode = function(name, props) {
+    prependNode(this, applyProperties(document.createElement(name), props));
+  };
+
+  /**
+   * Appends a node to the element
+   *
+   * @param {String} name
+   * @param {Object} props
+   */
+  element.appendNode = function(name, props) {
     this.appendChild(applyProperties(document.createElement(name), props));
   };
 
   /**
-   * Append a text node to the element
+   * Prepends a child text node to the element
    *
    * @param {String} text
+   */
+  element.prependText = function(text) {
+    prependNode(this, document.createTextNode(text));
+  };
+
+  /**
+   * Appends a child text node to the element
    *
-   * @returns {Node}
+   * @param {String} text
    */
   element.appendText = function(text) {
     this.appendChild(document.createTextNode(text));
   };
 
   /**
-   * Append a list of wrappers to the element
+   * Prepends a list of wrappers to the element
    *
    * @param {Proxy} wrappers
+   */
+  element.prependWrappers = function(...wrappers) {
+    wrappers.forEach(wrapper => prependNode(this, wrapper.unwrap()));
+  };
+
+  /**
+   * Appends a list of wrappers to the element
    *
-   * @returns {Node}
+   * @param {Proxy} wrappers
    */
   element.appendWrappers = function(...wrappers) {
     wrappers.forEach(wrapper => this.appendChild(wrapper.unwrap()));
   };
 
   /**
-   * Revoke the proxy and restore the underlying node and return it
+   * Revokes the proxy and restore the underlying node and return it
    *
    * @returns {Node}
    */
@@ -114,10 +152,13 @@ export default function(nameOrNode, props = {}) {
   };
 
   /**
-   * Retrieve lib only properties
+   * Retrieves lib only properties
    */
   const privKeys = excludeValues(Object.keys(node), ownKeys);
 
+  /**
+   * Creates the proxy
+   */
   const { proxy, revoke } = Proxy.revocable(element, {
     get: function(target, name, receiver) {
       if (!(name in target)) {

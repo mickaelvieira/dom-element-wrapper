@@ -7,7 +7,7 @@
 
 ## Motivation
 
-This thin wrapper (2k) aims to provide a friendlier interface when it comes to creating nodes using the DOM API.
+This thin wrapper aims to provide a friendlier interface when it comes to creating nodes using the DOM API.
 
 If like me, you enjoy chaining stuff and you feel sad when you have to use the DOM API, this library is made for you!
 
@@ -75,7 +75,7 @@ const nodes = wrap(element)
 
 We are now able to chain the node's methods! Whoop Whoop!
 
-You still have access to the element's properties, the only difference is: the proxy intercept "setters"  methods that return a _relevant_ result cannot be chained (.i.e such as `querySelector`, `cloneNode`, etc...) as so for methods starting with however methods that returns _irrelevant_ results can be chained (.i.e such as `addEventListener`, `insertBefore`, `appendChild`, etc...).
+You still have access to the element's properties, the only difference is: the proxy intercept "setters"  methods that return a _relevant_ result cannot be chained (.i.e such as `querySelector`, `cloneNode`, etc...) as so for methods starting with `get` `has` or `is` however methods that returns _irrelevant_ results can be chained (.i.e such as `addEventListener`, `insertBefore`, `appendChild`, etc...).
 
 > **What do I call `irrelevant` results?**
 >
@@ -183,25 +183,49 @@ const element = wrap(document.querySelector(".container"), {
 <div class="container" id="my-id"></div>
 ```
 
-#### Append a single node
+#### Prepend/append nodes
 
 ```js
-const element = wrap("div").appendNode("div", {
-  id: "my-id",
-  className: "my-style"
-});
+const element = wrap("div")
+  .prependNode("div", {
+    id: "my-id",
+  })
+  .prependNode("div", {
+    className: "my-style"
+  });
 ```
 
 ```html
 <div>
-  <div id="my-id" class="my-style"></div>
+  <div class="my-style"></div>
+  <div id="my-id"></div>
 </div>
 ```
 
-#### Append a text
+```js
+const element = wrap("div")
+  .appendNode("div", {
+    id: "my-id",
+  })
+  .appendNode("div", {
+    className: "my-style"
+  });
+```
+
+```html
+<div>
+  <div id="my-id"></div>
+  <div class="my-style"></div>
+</div>
+```
+
+#### Prepend/append text nodes
 
 ```js
-const element = wrap("div").appendText("Hello world"));
+const element = wrap("div")
+  .prependText("world")
+  .prependText(" ")
+  .prependText("Hello");
 ```
 
 ```html
@@ -210,7 +234,36 @@ const element = wrap("div").appendText("Hello world"));
 </div>
 ```
 
-#### Add one or multiple wrappers
+```js
+const element = wrap("div")
+  .appendText("Hello")
+  .appendText(" ")
+  .appendText("world");
+```
+
+```html
+<div>
+  Hello world
+</div>
+```
+
+#### Prepend/append wrappers
+
+```js
+const element = wrap("div").prependWrappers(
+  wrap("h1"),
+  wrap("h2"),
+  wrap("p")
+);
+```
+
+```html
+<div>
+  <p></p>
+  <h2></h2>
+  <h1></h1>
+</div>
+```
 
 ```js
 const element = wrap("div").appendWrappers(
@@ -233,6 +286,8 @@ const element = wrap("div").appendWrappers(
 ```js
 const element = wrap("div").unwrap();
 ```
+
+That's it!
 
 ## Contributing
 

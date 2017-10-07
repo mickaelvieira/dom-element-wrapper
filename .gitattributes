@@ -1,10 +1,15 @@
+.github/          export-ignore
+bin/              export-ignore
+examples/         export-ignore
+spec/             export-ignore
 .babelrc          export-ignore
-.eslintrc         export-ignore
 .eslintignore     export-ignore
+.eslintrc         export-ignore
+.gitignore        export-ignore
+.npmignore        export-ignore
+.travis.yml       export-ignore
 jest.json         export-ignore
 Makefile          export-ignore
-spec/             export-ignore
-bin/              export-ignore
 rollup.config.js  export-ignore
 
 * text=auto
