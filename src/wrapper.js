@@ -69,7 +69,7 @@ function prependNode(target, child) {
 *
 * @returns {Proxy}
 */
-export default function(nameOrNode, props = {}) {
+export default function(nameOrNode, props) {
   const node =
     typeof nameOrNode === "string"
       ? document.createElement(nameOrNode)
@@ -90,10 +90,8 @@ export default function(nameOrNode, props = {}) {
    *
    * @param {String} name
    * @param {Object} props
-   *
-   * @returns {Node}
    */
-  element.prependNode = function(name, props = {}) {
+  element.prependNode = function(name, props) {
     prependNode(this, applyProperties(document.createElement(name), props));
   };
 
@@ -102,10 +100,8 @@ export default function(nameOrNode, props = {}) {
    *
    * @param {String} name
    * @param {Object} props
-   *
-   * @returns {Node}
    */
-  element.appendNode = function(name, props = {}) {
+  element.appendNode = function(name, props) {
     this.appendChild(applyProperties(document.createElement(name), props));
   };
 
@@ -113,8 +109,6 @@ export default function(nameOrNode, props = {}) {
    * Prepends a child text node to the element
    *
    * @param {String} text
-   *
-   * @returns {void}
    */
   element.prependText = function(text) {
     prependNode(this, document.createTextNode(text));
@@ -124,8 +118,6 @@ export default function(nameOrNode, props = {}) {
    * Appends a child text node to the element
    *
    * @param {String} text
-   *
-   * @returns {Node}
    */
   element.appendText = function(text) {
     this.appendChild(document.createTextNode(text));
@@ -135,8 +127,6 @@ export default function(nameOrNode, props = {}) {
    * Prepends a list of wrappers to the element
    *
    * @param {Proxy} wrappers
-   *
-   * @returns {Node}
    */
   element.prependWrappers = function(...wrappers) {
     wrappers.forEach(wrapper => prependNode(this, wrapper.unwrap()));
@@ -146,8 +136,6 @@ export default function(nameOrNode, props = {}) {
    * Appends a list of wrappers to the element
    *
    * @param {Proxy} wrappers
-   *
-   * @returns {Node}
    */
   element.appendWrappers = function(...wrappers) {
     wrappers.forEach(wrapper => this.appendChild(wrapper.unwrap()));
