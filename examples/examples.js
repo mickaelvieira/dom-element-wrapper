@@ -11,34 +11,27 @@ function form_example() {
   })
     .addEventListener("submit", function(event) {
       event.preventDefault();
-      console.log(event);
     })
     .appendWrappers(
-      wrap("div", { className: "form-group" }).appendWrappers(
-        wrap("input", {
-          type: "text",
-          id: "username",
-          name: "username",
-          className: "form-control"
-        })
-      ),
-      wrap("div", { className: "form-group" }).appendWrappers(
-        wrap("input", {
-          type: "text",
-          id: "password",
-          name: "password",
-          className: "form-control"
-        })
-      ),
-      wrap("div", { className: "form-group" }).appendWrappers(
-        wrap("input", {
-          type: "submit",
-          id: "username",
-          name: "username",
-          className: "btn btn-secondary",
-          value: "Click me"
-        })
-      )
+      wrap("div", { className: "form-group" }).appendNode("input", {
+        type: "text",
+        id: "username",
+        name: "username",
+        className: "form-control"
+      }),
+      wrap("div", { className: "form-group" }).appendNode("input", {
+        type: "text",
+        id: "password",
+        name: "password",
+        className: "form-control"
+      }),
+      wrap("div", { className: "form-group" }).appendNode("input", {
+        type: "submit",
+        id: "username",
+        name: "username",
+        className: "btn btn-secondary",
+        value: "Click me"
+      })
     )
     .unwrap();
 
@@ -47,8 +40,6 @@ function form_example() {
 }
 
 function list_example() {
-  const wrap = DOMElementWrapper.wrap;
-
   const items = ["Cat", "Dog", "Wolf"].map(name => wrap("li").appendText(name));
 
   const element = wrap("div")
