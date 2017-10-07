@@ -1,11 +1,11 @@
 import whiteList from "./whiteList";
 
 /**
-* @param {Object} object
-* @param {Object} props
-*
-* @returns {Object}
-*/
+ * @param {Object} object
+ * @param {Object} props
+ *
+ * @returns {Object}
+ */
 function applyProperties(object, props = {}) {
   Object.keys(props).forEach(prop => {
     object[prop] = props[prop];
@@ -14,13 +14,13 @@ function applyProperties(object, props = {}) {
 }
 
 /**
-* Restore the node as it was before wrapping
-*
-* @param {Node}  node
-* @param {Array} privKeys
-*
-* @returns {Node}
-*/
+ * Restore the node as it was before wrapping
+ *
+ * @param {Node}  node
+ * @param {Array} privKeys
+ *
+ * @returns {Node}
+ */
 function restore(node, privKeys) {
   Object.keys(node)
     .filter(prop => privKeys.indexOf(prop) >= 0)
@@ -29,30 +29,30 @@ function restore(node, privKeys) {
 }
 
 /**
-* Do not hijack methods with name matching these rules
-*
-* @param {String} name
-*
-* @returns {Boolean}
-*/
+ * Do not hijack methods with name matching these rules
+ *
+ * @param {String} name
+ *
+ * @returns {Boolean}
+ */
 function doesMethodReturnRelevantValue(name) {
   return /^(get|has|is)/.test(name) || whiteList.indexOf(name) >= 0;
 }
 
 /**
-* @param {Array} subject
-* @param {Array} excluded
-*
-* @returns {Array}
-*/
+ * @param {Array} subject
+ * @param {Array} excluded
+ *
+ * @returns {Array}
+ */
 function excludeValues(subject, excluded) {
   return subject.filter(value => excluded.indexOf(value) === -1);
 }
 
 /**
-* @param {Node} target
-* @param {Node} child
-*/
+ * @param {Node} target
+ * @param {Node} child
+ */
 function prependNode(target, child) {
   if (!target.firstChild) {
     target.appendChild(child);
@@ -62,13 +62,13 @@ function prependNode(target, child) {
 }
 
 /**
-* Creates and wraps a node in order to chain its methods
-*
-* @param {String|Node} nameOrNode
-* @param {Object}      props
-*
-* @returns {Proxy}
-*/
+ * Creates and wraps a node in order to chain its methods
+ *
+ * @param {String|Node} nameOrNode
+ * @param {Object}      props
+ *
+ * @returns {Proxy}
+ */
 export default function(nameOrNode, props) {
   const node =
     typeof nameOrNode === "string"
@@ -156,6 +156,9 @@ export default function(nameOrNode, props) {
    */
   const privKeys = excludeValues(Object.keys(node), ownKeys);
 
+  /**
+   * Creates the proxy
+   */
   const { proxy, revoke } = Proxy.revocable(element, {
     get: function(target, name, receiver) {
       if (!(name in target)) {
