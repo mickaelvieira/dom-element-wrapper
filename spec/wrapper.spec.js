@@ -138,10 +138,51 @@ describe("wrap", () => {
     expect(wrapper.querySelectorAll(".my-class")).toEqual(expect.any(NodeList));
   });
 
-  test("appends a text node", () => {
-    const element = wrap("div").appendText("hello world");
+  test("prepends text nodes", () => {
+    const element = wrap("div")
+      .prependText("world")
+      .prependText(" ")
+      .prependText("hello");
+
+    expect(element.firstChild.nodeType).toBe(Node.TEXT_NODE);
+    expect(element.lastChild.nodeType).toBe(Node.TEXT_NODE);
+    expect(element.innerHTML).toBe("hello world");
+  });
+
+  test("appends text nodes", () => {
+    const element = wrap("div")
+      .appendText("hello")
+      .appendText(" ")
+      .appendText("world");
+
     expect(element.firstChild.nodeType).toBe(Node.TEXT_NODE);
     expect(element.innerHTML).toBe("hello world");
+  });
+
+  test("prepends nodes", () => {
+    const element = wrap("div").prependNode("p").prependNode("h1");
+    expect(element.firstChild.nodeType).toBe(Node.ELEMENT_NODE);
+    expect(element.lastChild.nodeType).toBe(Node.ELEMENT_NODE);
+    expect(element.firstChild.nodeName.toLowerCase()).toBe("h1");
+    expect(element.lastChild.nodeName.toLowerCase()).toBe("p");
+  });
+
+  test("prepends nodes with properties", () => {
+    const element = wrap("div")
+      .prependNode("p", {
+        className: "class-p"
+      })
+      .prependNode("h1", {
+        className: "class-h1"
+      });
+
+    expect(element.firstChild.nodeType).toBe(Node.ELEMENT_NODE);
+    expect(element.firstChild.nodeName.toLowerCase()).toBe("h1");
+    expect(element.firstChild.className).toBe("class-h1");
+
+    expect(element.lastChild.nodeType).toBe(Node.ELEMENT_NODE);
+    expect(element.lastChild.nodeName.toLowerCase()).toBe("p");
+    expect(element.lastChild.className).toBe("class-p");
   });
 
   test("appends a node", () => {
@@ -159,6 +200,19 @@ describe("wrap", () => {
     expect(element.firstChild.className).toBe("my-css-class");
   });
 
+  test("prepends a wrapper", () => {
+    const element1 = wrap("div");
+    const element2 = wrap("h1");
+
+    element1.prependWrappers(element2);
+
+    expect(element1.firstChild.nodeType).toBe(Node.ELEMENT_NODE);
+    expect(element1.firstChild.nodeName.toLowerCase()).toBe("h1");
+
+    expect(element1.lastChild.nodeType).toBe(Node.ELEMENT_NODE);
+    expect(element1.lastChild.nodeName.toLowerCase()).toBe("h1");
+  });
+
   test("appends a wrapper", () => {
     const element1 = wrap("div");
     const element2 = wrap("p");
@@ -169,7 +223,21 @@ describe("wrap", () => {
     expect(element1.firstChild.nodeName.toLowerCase()).toBe("p");
   });
 
-  test("appends multiple proxy elements", () => {
+  test("prepends multiple wrappers", () => {
+    const element1 = wrap("div");
+    const element2 = wrap("h1");
+    const element3 = wrap("h2");
+
+    element1.prependWrappers(element3, element2);
+
+    expect(element1.firstChild.nodeType).toBe(Node.ELEMENT_NODE);
+    expect(element1.firstChild.nodeName.toLowerCase()).toBe("h1");
+
+    expect(element1.lastChild.nodeType).toBe(Node.ELEMENT_NODE);
+    expect(element1.lastChild.nodeName.toLowerCase()).toBe("h2");
+  });
+
+  test("appends multiple wrappers", () => {
     const element1 = wrap("div");
     const element2 = wrap("p");
     const element3 = wrap("span");

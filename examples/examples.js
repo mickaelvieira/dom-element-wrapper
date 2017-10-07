@@ -59,7 +59,7 @@ function list_example() {
     )
     .unwrap();
 
-  let container = document.querySelector(".list-example");
+  const container = document.querySelector(".list-example");
   container.appendChild(element);
 }
 
