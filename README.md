@@ -171,6 +171,16 @@ const element = wrap("div", { id: "my-id" });
 <div id="my-id"></div>
 ```
 
+There is also a useful shortcut to append a text to the element
+
+```js
+const element = wrap("div", "Hello world", { id: "my-id" });
+```
+
+```html
+<div id="my-id">Hello world</div>
+```
+
 Wrap an existing node
 
 ```js
