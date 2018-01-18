@@ -83,11 +83,31 @@ describe("wrap", () => {
     }).toThrowError('Invalid method or property name "whatever_property"');
   });
 
-  test("may be build with a set of properties", () => {
+  test("may be created with a set of properties", () => {
     const element = wrap("div", {
       className: "my-class-name",
       id: "my-element"
     });
+
+    expect(element.id).toBe("my-element");
+    expect(element.className).toBe("my-class-name");
+
+    expect(element.hasAttribute("id")).toBe(true);
+    expect(element.hasAttribute("class")).toBe(true);
+  });
+
+  test("may be created with a text", () => {
+    const element = wrap("div", "Hello world");
+    expect(element.textContent).toBe("Hello world");
+  });
+
+  test("may be created with a text and set of properties", () => {
+    const element = wrap("div", "Hello world", {
+      className: "my-class-name",
+      id: "my-element"
+    });
+
+    expect(element.textContent).toBe("Hello world");
 
     expect(element.id).toBe("my-element");
     expect(element.className).toBe("my-class-name");

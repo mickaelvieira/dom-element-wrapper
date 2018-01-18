@@ -45,7 +45,8 @@ function list_example() {
   const element = wrap("div")
     .setAttribute("id", "element-id")
     .appendWrappers(
-      wrap("div").appendWrappers(wrap("h2").appendText("Animals")),
+      wrap("h1", "List of animals"),
+      wrap("div").appendWrappers(wrap("h2", "Animals")),
       wrap("ul").appendWrappers(...items)
     )
     .unwrap();

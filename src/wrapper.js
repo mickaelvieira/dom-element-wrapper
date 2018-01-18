@@ -69,11 +69,25 @@ function prependNode(target, child) {
  *
  * @returns {Proxy}
  */
-export default function(nameOrNode, props) {
+export default function(...args) {
   const node =
-    typeof nameOrNode === "string"
-      ? document.createElement(nameOrNode)
-      : nameOrNode;
+    typeof args[0] === "string" ? document.createElement(args[0]) : args[0];
+
+  let text = null;
+  let props = {};
+
+  if (args.length === 2) {
+    if (typeof args[1] === "string") {
+      text = args[1];
+    } else {
+      props = args[1];
+    }
+  }
+
+  if (args.length === 3) {
+    text = args[1];
+    props = args[2];
+  }
 
   /**
    * Caches object enumerable properties
@@ -84,6 +98,13 @@ export default function(nameOrNode, props) {
    * Applies properties
    */
   const element = applyProperties(node, props);
+
+  /**
+   * Append Text node if it is available
+   */
+  if (text) {
+    element.appendChild(document.createTextNode(text));
+  }
 
   /**
    * Prepends a node to the element
