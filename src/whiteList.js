@@ -1,7 +1,7 @@
 /**
-* A list of methods that might be called on the node but they will return
-* a value so they should not return the wrapper
-*/
+ * A list of methods that might be called on the node but they will return
+ * a value so they should not return the wrapper
+ */
 // prettier-ignore
 export default [
   // "addEventListener",
