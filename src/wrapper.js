@@ -60,7 +60,7 @@ function excludeValues(subject, excluded) {
  * @param {Node} target
  * @param {Node} child
  */
-function prependNode(target, child) {
+function prependChild(target, child) {
   if (!target.firstChild) {
     target.appendChild(child);
   } else {
@@ -92,6 +92,34 @@ export default function(nameOrNode, props) {
    */
   const element = applyProperties(node, props);
 
+  element.prependAll = function(...children) {
+    children.forEach(child => {
+      if (typeof child.unwrap === "function") {
+        prependChild(this, child.unwrap());
+      } else if (typeof child === "string") {
+        prependChild(this, document.createTextNode(child));
+      } else if (child instanceof Node) {
+        prependChild(this, child);
+      } else {
+        throw new Error(`Invalid type '${typeof child}'`);
+      }
+    });
+  };
+
+  element.appendAll = function(...children) {
+    children.forEach(child => {
+      if (typeof child.unwrap === "function") {
+        this.appendChild(child.unwrap());
+      } else if (typeof child === "string") {
+        this.appendChild(document.createTextNode(child));
+      } else if (child instanceof Node) {
+        this.appendChild(child);
+      } else {
+        throw new Error(`Invalid type ${typeof child}`);
+      }
+    });
+  };
+
   /**
    * Prepends a node to the element
    *
@@ -99,7 +127,7 @@ export default function(nameOrNode, props) {
    * @param {Object} props
    */
   element.prependNode = function(name, props) {
-    prependNode(this, applyProperties(document.createElement(name), props));
+    prependChild(this, applyProperties(document.createElement(name), props));
   };
 
   /**
@@ -118,7 +146,7 @@ export default function(nameOrNode, props) {
    * @param {String} text
    */
   element.prependText = function(text) {
-    prependNode(this, document.createTextNode(text));
+    prependChild(this, document.createTextNode(text));
   };
 
   /**
@@ -136,7 +164,7 @@ export default function(nameOrNode, props) {
    * @param {Proxy} wrappers
    */
   element.prependWrappers = function(...wrappers) {
-    wrappers.forEach(wrapper => prependNode(this, wrapper.unwrap()));
+    wrappers.forEach(wrapper => prependChild(this, wrapper.unwrap()));
   };
 
   /**
