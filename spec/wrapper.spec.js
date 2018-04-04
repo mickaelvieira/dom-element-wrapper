@@ -85,12 +85,13 @@ describe("wrap", () => {
 
   test("may be build with a set of properties", () => {
     const element = wrap("div", {
-      className: "my-class-name",
+      class: "my-class-name",
       id: "my-element"
     });
 
     expect(element.id).toBe("my-element");
     expect(element.className).toBe("my-class-name");
+    expect(element.classList.contains("my-class-name")).toBe(true);
 
     expect(element.hasAttribute("id")).toBe(true);
     expect(element.hasAttribute("class")).toBe(true);
@@ -160,7 +161,9 @@ describe("wrap", () => {
   });
 
   test("prepends nodes", () => {
-    const element = wrap("div").prependNode("p").prependNode("h1");
+    const element = wrap("div")
+      .prependNode("p")
+      .prependNode("h1");
     expect(element.firstChild.nodeType).toBe(Node.ELEMENT_NODE);
     expect(element.lastChild.nodeType).toBe(Node.ELEMENT_NODE);
     expect(element.firstChild.nodeName.toLowerCase()).toBe("h1");
@@ -280,5 +283,25 @@ describe("wrap", () => {
     wrapper.custom3 = "value";
 
     expect(Object.keys(wrapper)).toEqual(["custom1", "custom2", "custom3"]);
+  });
+
+  test("adds aria attributes", () => {
+    const element = wrap("div", {
+      "aria-hidden": true,
+      role: "menu"
+    });
+
+    expect(element.getAttribute("aria-hidden")).toBe("true");
+    expect(element.getAttribute("role")).toBe("menu");
+  });
+
+  test("adds data attributes", () => {
+    const element = wrap("div", {
+      "data-foo": "bar",
+      "data-foo-bar": "baz"
+    }).unwrap();
+
+    expect(element.dataset.foo).toBe("bar");
+    expect(element.dataset.fooBar).toBe("baz");
   });
 });

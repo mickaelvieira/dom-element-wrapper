@@ -1,5 +1,8 @@
 import whiteList from "./whiteList";
 
+const isData = name => name.startsWith("data");
+const isAria = name => name.startsWith("aria") || name === "role";
+
 /**
  * @param {Object} object
  * @param {Object} props
@@ -8,7 +11,11 @@ import whiteList from "./whiteList";
  */
 function applyProperties(object, props = {}) {
   Object.keys(props).forEach(prop => {
-    object[prop] = props[prop];
+    if (isAria(prop) || isData(prop) || prop === "class") {
+      object.setAttribute(prop, props[prop]);
+    } else {
+      object[prop] = props[prop];
+    }
   });
   return object;
 }

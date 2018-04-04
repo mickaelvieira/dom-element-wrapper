@@ -40,13 +40,19 @@ function form_example() {
 }
 
 function list_example() {
-  const items = ["Cat", "Dog", "Wolf"].map(name => wrap("li").appendText(name));
+  const items = ["Cat", "Dog", "Wolf"].map((name, index) =>
+    wrap("li", { "data-id": index }).appendText(name)
+  );
 
   const element = wrap("div")
     .setAttribute("id", "element-id")
     .appendWrappers(
       wrap("div").appendWrappers(wrap("h2").appendText("Animals")),
-      wrap("ul").appendWrappers(...items)
+      wrap("ul", {
+        role: "menu",
+        "aria-menu": true,
+        class: "menu-items"
+      }).appendWrappers(...items)
     )
     .unwrap();
 
