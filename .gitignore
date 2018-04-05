@@ -3,5 +3,6 @@ node_modules
 dist
 coverage
 yarn.lock
+package-lock.json
 .github/.access_token
 npm-debug.log

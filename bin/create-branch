@@ -7,24 +7,24 @@ declare -r WD="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 declare -r PACKAGE_FILE="$WD/package.json"
 
 info() {
-    printf "\x1b[32m\xE2\x87\x92 %s\x1b[0m\n" "$1"
+    printf "\\x1b[32m\\xE2\\x87\\x92 %s\\x1b[0m\\n" "$1"
 }
 
 error() {
-    printf "\x1b[97m\x1b[41m\x21\x1b[0m \x1b[31m%s\x1b[0m\n" "$1" 1>&2
+    printf "\\x1b[97m\\x1b[41m\\x21\\x1b[0m \\x1b[31m%s\\x1b[0m\\n" "$1" 1>&2
     exit 1
 }
 
 get_version() {
     local version
     if [[ -f "$PACKAGE_FILE" ]]; then
-        version=$(grep -E "version" "$PACKAGE_FILE" | grep -Eo "([\.0-9]+)")
+        version=$(grep -E "version" "$PACKAGE_FILE" | grep -Eo "([\\.0-9]+)")
     fi
     echo "$version"
 }
 
 get_branch() {
-    git branch | grep -E "^\*" | awk '{print $2}'
+    git branch | grep -E "^\\*" | awk '{print $2}'
 }
 
 update_version() {
@@ -33,10 +33,10 @@ update_version() {
 
     case "$os_type" in
         Linux)
-            sed -E "s/\"version\": \"([\.0-9]+)\"/\"version\": \"$version\"/" -i "$PACKAGE_FILE"
+            sed -E "s/\"version\": \"([\\.0-9]+)\"/\"version\": \"$version\"/" -i "$PACKAGE_FILE"
             ;;
         Darwin)
-            sed -i .bak -E "s/\"version\": \"([\.0-9]+)\"/\"version\": \"$version\"/" "$PACKAGE_FILE"
+            sed -i .bak -E "s/\"version\": \"([\\.0-9]+)\"/\"version\": \"$version\"/" "$PACKAGE_FILE"
             rm -vf "$PACKAGE_FILE.bak"
             ;;
         *)
@@ -51,31 +51,31 @@ get_next_branch_message() {
 
     cat <<EOM
 Which release branch do you want to create? [None]:
-1) Major Version (\x1b[33m$major\x1b[0m)
-2) Minor Version (\x1b[33m$minor\x1b[0m)
-3) Patch Version (\x1b[33m$patch\x1b[0m)
+1) Major Version (\\x1b[33m$major\\x1b[0m)
+2) Minor Version (\\x1b[33m$minor\\x1b[0m)
+3) Patch Version (\\x1b[33m$patch\\x1b[0m)
 4) Manual entry
 >
 EOM
 }
 
 split_version() {
-    local numbers=(${1//./ })
+    local numbers=("${1//./ }")
     echo "${numbers[@]}"
 }
 
 get_next_major_version() {
-    local numbers=($(split_version "$1"))
+    local numbers=("$(split_version "$1")")
     [[ ${#numbers[@]} -eq 3 ]] && echo "$((numbers[0] + 1)).0.0"
 }
 
 get_next_minor_version() {
-    local numbers=($(split_version "$1"))
+    local numbers=("$(split_version "$1")")
     [[ ${#numbers[@]} -eq 3 ]] && echo "${numbers[0]}.$((numbers[1] + 1)).0"
 }
 
 get_next_patch_version() {
-    local numbers=($(split_version "$1"))
+    local numbers=("$(split_version "$1")")
     [[ ${#numbers[@]} -eq 3 ]] && echo "${numbers[0]}.${numbers[1]}.$((numbers[2] + 1))"
 }
 
@@ -102,7 +102,7 @@ create_next_release_branch() {
 
     if [[ -n "$branch_name" ]]; then
 
-        read -erp "$(echo -e "Do you want to create the branch with the name '\x1b[33m${branch_name}\x1b[0m'") [Y/n] " confirm
+        read -erp "$(echo -e "Do you want to create the branch with the name '\\x1b[33m${branch_name}\\x1b[0m'") [Y/n] " confirm
 
         [[ -z "$confirm" ]] && confirm="y"
 

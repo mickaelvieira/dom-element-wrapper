@@ -7,24 +7,24 @@ declare -r WD="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 declare -r PACKAGE_FILE="$WD/package.json"
 
 info() {
-    printf "\x1b[32m\xE2\x87\x92 %s\x1b[0m\n" "$1"
+    printf "\\x1b[32m\\xE2\\x87\\x92 %s\\x1b[0m\\n" "$1"
 }
 
 error() {
-    printf "\x1b[97m\x1b[41m\x21\x1b[0m \x1b[31m%s\x1b[0m\n" "$1" 1>&2
+    printf "\\x1b[97m\\x1b[41m\\x21\\x1b[0m \\x1b[31m%s\\x1b[0m\\n" "$1" 1>&2
     exit 1
 }
 
 get_version() {
     local version
     if [[ -f "$PACKAGE_FILE" ]]; then
-        version=$(grep -E "version" "$PACKAGE_FILE" | grep -Eo "([\.0-9]+)")
+        version=$(grep -E "version" "$PACKAGE_FILE" | grep -Eo "([\\.0-9]+)")
     fi
     echo "$version"
 }
 
 get_branch() {
-    git branch | grep -E "^\*" | awk '{print $2}'
+    git branch | grep -E "^\\*" | awk '{print $2}'
 }
 
 get_access_token() {
@@ -52,8 +52,8 @@ get_confirmation_message() {
 
     cat <<EOM
 You are about to create a new release:
-- Branch: \x1b[33m${branch}\x1b[0m
-- Version: \x1b[33m${version}\x1b[0m
+- Branch: \\x1b[33m${branch}\\x1b[0m
+- Version: \\x1b[33m${version}\\x1b[0m
 
 Do you want to proceed [y/N]:
 EOM

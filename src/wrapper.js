@@ -1,5 +1,11 @@
 import whiteList from "./whiteList";
 
+const attributes = ["class", "tabindex"];
+
+const isData = name => name.startsWith("data");
+const isAria = name => name.startsWith("aria") || name === "role";
+const isAttribute = name => attributes.includes(name);
+
 /**
  * @param {Object} object
  * @param {Object} props
@@ -8,7 +14,11 @@ import whiteList from "./whiteList";
  */
 function applyProperties(object, props = {}) {
   Object.keys(props).forEach(prop => {
-    object[prop] = props[prop];
+    if (isAria(prop) || isData(prop) || isAttribute(prop)) {
+      object.setAttribute(prop, props[prop]);
+    } else {
+      object[prop] = props[prop];
+    }
   });
   return object;
 }
@@ -23,7 +33,7 @@ function applyProperties(object, props = {}) {
  */
 function restore(node, privKeys) {
   Object.keys(node)
-    .filter(prop => privKeys.indexOf(prop) >= 0)
+    .filter(prop => privKeys.includes(prop))
     .forEach(key => delete node[key]);
   return node;
 }
@@ -36,7 +46,7 @@ function restore(node, privKeys) {
  * @returns {Boolean}
  */
 function doesMethodReturnRelevantValue(name) {
-  return /^(get|has|is)/.test(name) || whiteList.indexOf(name) >= 0;
+  return /^(get|has|is)/.test(name) || whiteList.includes(name);
 }
 
 /**
@@ -46,19 +56,31 @@ function doesMethodReturnRelevantValue(name) {
  * @returns {Array}
  */
 function excludeValues(subject, excluded) {
-  return subject.filter(value => excluded.indexOf(value) === -1);
+  return subject.filter(value => !excluded.includes(value));
 }
 
 /**
  * @param {Node} target
  * @param {Node} child
  */
-function prependNode(target, child) {
+function prependChild(target, child) {
   if (!target.firstChild) {
     target.appendChild(child);
   } else {
     target.insertBefore(child, target.firstChild);
   }
+}
+
+function prepend(...children) {
+  children.forEach(child =>
+    this.prepend(typeof child.unwrap === "function" ? child.unwrap() : child)
+  );
+}
+
+function append(...children) {
+  children.forEach(child =>
+    this.append(typeof child.unwrap === "function" ? child.unwrap() : child)
+  );
 }
 
 /**
@@ -92,7 +114,7 @@ export default function(nameOrNode, props) {
    * @param {Object} props
    */
   element.prependNode = function(name, props) {
-    prependNode(this, applyProperties(document.createElement(name), props));
+    prependChild(this, applyProperties(document.createElement(name), props));
   };
 
   /**
@@ -111,7 +133,7 @@ export default function(nameOrNode, props) {
    * @param {String} text
    */
   element.prependText = function(text) {
-    prependNode(this, document.createTextNode(text));
+    prependChild(this, document.createTextNode(text));
   };
 
   /**
@@ -129,7 +151,7 @@ export default function(nameOrNode, props) {
    * @param {Proxy} wrappers
    */
   element.prependWrappers = function(...wrappers) {
-    wrappers.forEach(wrapper => prependNode(this, wrapper.unwrap()));
+    wrappers.forEach(wrapper => prependChild(this, wrapper.unwrap()));
   };
 
   /**
@@ -167,6 +189,20 @@ export default function(nameOrNode, props) {
 
       if (typeof target[name] !== "function") {
         return target[name];
+      }
+
+      if (name === "prepend") {
+        return function(...args) {
+          prepend.call(target, ...args);
+          return receiver;
+        };
+      }
+
+      if (name === "append") {
+        return function(...args) {
+          append.call(target, ...args);
+          return receiver;
+        };
       }
 
       return function(...args) {
