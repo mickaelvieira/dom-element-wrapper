@@ -73,7 +73,7 @@ describe("wrap", () => {
       const element1 = wrap("div");
       const element2 = wrap("h1");
 
-      element1.prependAll(element2);
+      element1.prepend(element2);
 
       expect(element1.firstChild.nodeType).toBe(Node.ELEMENT_NODE);
       expect(element1.firstChild.nodeName.toLowerCase()).toBe("h1");
@@ -87,20 +87,20 @@ describe("wrap", () => {
       const element2 = wrap("h1");
       const element3 = wrap("h2");
 
-      element1.prependAll(element3, element2);
+      element1.prepend(element2, element3);
 
       expect(element1.firstChild.nodeType).toBe(Node.ELEMENT_NODE);
-      expect(element1.firstChild.nodeName.toLowerCase()).toBe("h1");
+      expect(element1.firstChild.nodeName.toLowerCase()).toBe("h2");
 
       expect(element1.lastChild.nodeType).toBe(Node.ELEMENT_NODE);
-      expect(element1.lastChild.nodeName.toLowerCase()).toBe("h2");
+      expect(element1.lastChild.nodeName.toLowerCase()).toBe("h1");
     });
 
     test("prepends text nodes", () => {
       const element = wrap("div")
-        .prependAll("world")
-        .prependAll(" ")
-        .prependAll("hello");
+        .prepend("world")
+        .prepend(" ")
+        .prepend("hello");
 
       expect(element.firstChild.nodeType).toBe(Node.TEXT_NODE);
       expect(element.lastChild.nodeType).toBe(Node.TEXT_NODE);
@@ -109,8 +109,8 @@ describe("wrap", () => {
 
     test("prepends nodes", () => {
       const element = wrap("div")
-        .prependAll(document.createElement("p"))
-        .prependAll(document.createElement("h1"));
+        .prepend(document.createElement("p"))
+        .prepend(document.createElement("h1"));
       expect(element.firstChild.nodeType).toBe(Node.ELEMENT_NODE);
       expect(element.lastChild.nodeType).toBe(Node.ELEMENT_NODE);
       expect(element.firstChild.nodeName.toLowerCase()).toBe("h1");
@@ -123,7 +123,7 @@ describe("wrap", () => {
       const element1 = wrap("div");
       const element2 = wrap("p");
 
-      element1.appendAll(element2);
+      element1.append(element2);
 
       expect(element1.firstChild.nodeType).toBe(Node.ELEMENT_NODE);
       expect(element1.firstChild.nodeName.toLowerCase()).toBe("p");
@@ -134,7 +134,7 @@ describe("wrap", () => {
       const element2 = wrap("p");
       const element3 = wrap("span");
 
-      element1.appendAll(element2, element3);
+      element1.append(element2, element3);
 
       expect(element1.firstChild.nodeName.toLowerCase()).toBe("p");
       expect(element1.lastChild.nodeName.toLowerCase()).toBe("span");
@@ -142,16 +142,16 @@ describe("wrap", () => {
 
     test("appends text nodes", () => {
       const element = wrap("div")
-        .appendAll("hello")
-        .appendAll(" ")
-        .appendAll("world");
+        .append("hello")
+        .append(" ")
+        .append("world");
 
       expect(element.firstChild.nodeType).toBe(Node.TEXT_NODE);
       expect(element.innerHTML).toBe("hello world");
     });
 
     test("appends a node", () => {
-      const element = wrap("div").appendAll(document.createElement("p"));
+      const element = wrap("div").append(document.createElement("p"));
       expect(element.firstChild.nodeType).toBe(Node.ELEMENT_NODE);
       expect(element.firstChild.nodeName.toLowerCase()).toBe("p");
     });
@@ -403,6 +403,14 @@ describe("wrap", () => {
 
       expect(element.dataset.foo).toBe("bar");
       expect(element.dataset.fooBar).toBe("baz");
+    });
+
+    test("adds tabindex attributes", () => {
+      const element = wrap("div", {
+        tabindex: -1
+      }).unwrap();
+
+      expect(element.getAttribute("tabindex")).toBe("-1");
     });
   });
 });

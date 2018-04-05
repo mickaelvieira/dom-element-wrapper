@@ -1,7 +1,10 @@
 import whiteList from "./whiteList";
 
+const attributes = ["class", "tabindex"];
+
 const isData = name => name.startsWith("data");
 const isAria = name => name.startsWith("aria") || name === "role";
+const isAttribute = name => attributes.includes(name);
 
 /**
  * @param {Object} object
@@ -11,7 +14,7 @@ const isAria = name => name.startsWith("aria") || name === "role";
  */
 function applyProperties(object, props = {}) {
   Object.keys(props).forEach(prop => {
-    if (isAria(prop) || isData(prop) || prop === "class") {
+    if (isAria(prop) || isData(prop) || isAttribute(prop)) {
       object.setAttribute(prop, props[prop]);
     } else {
       object[prop] = props[prop];
@@ -30,7 +33,7 @@ function applyProperties(object, props = {}) {
  */
 function restore(node, privKeys) {
   Object.keys(node)
-    .filter(prop => privKeys.indexOf(prop) >= 0)
+    .filter(prop => privKeys.includes(prop))
     .forEach(key => delete node[key]);
   return node;
 }
@@ -43,7 +46,7 @@ function restore(node, privKeys) {
  * @returns {Boolean}
  */
 function doesMethodReturnRelevantValue(name) {
-  return /^(get|has|is)/.test(name) || whiteList.indexOf(name) >= 0;
+  return /^(get|has|is)/.test(name) || whiteList.includes(name);
 }
 
 /**
@@ -53,7 +56,7 @@ function doesMethodReturnRelevantValue(name) {
  * @returns {Array}
  */
 function excludeValues(subject, excluded) {
-  return subject.filter(value => excluded.indexOf(value) === -1);
+  return subject.filter(value => !excluded.includes(value));
 }
 
 /**
@@ -66,6 +69,18 @@ function prependChild(target, child) {
   } else {
     target.insertBefore(child, target.firstChild);
   }
+}
+
+function prepend(...children) {
+  children.forEach(child =>
+    this.prepend(typeof child.unwrap === "function" ? child.unwrap() : child)
+  );
+}
+
+function append(...children) {
+  children.forEach(child =>
+    this.append(typeof child.unwrap === "function" ? child.unwrap() : child)
+  );
 }
 
 /**
@@ -91,34 +106,6 @@ export default function(nameOrNode, props) {
    * Applies properties
    */
   const element = applyProperties(node, props);
-
-  element.prependAll = function(...children) {
-    children.forEach(child => {
-      if (typeof child.unwrap === "function") {
-        prependChild(this, child.unwrap());
-      } else if (typeof child === "string") {
-        prependChild(this, document.createTextNode(child));
-      } else if (child instanceof Node) {
-        prependChild(this, child);
-      } else {
-        throw new Error(`Invalid type '${typeof child}'`);
-      }
-    });
-  };
-
-  element.appendAll = function(...children) {
-    children.forEach(child => {
-      if (typeof child.unwrap === "function") {
-        this.appendChild(child.unwrap());
-      } else if (typeof child === "string") {
-        this.appendChild(document.createTextNode(child));
-      } else if (child instanceof Node) {
-        this.appendChild(child);
-      } else {
-        throw new Error(`Invalid type ${typeof child}`);
-      }
-    });
-  };
 
   /**
    * Prepends a node to the element
@@ -202,6 +189,20 @@ export default function(nameOrNode, props) {
 
       if (typeof target[name] !== "function") {
         return target[name];
+      }
+
+      if (name === "prepend") {
+        return function(...args) {
+          prepend.call(target, ...args);
+          return receiver;
+        };
+      }
+
+      if (name === "append") {
+        return function(...args) {
+          append.call(target, ...args);
+          return receiver;
+        };
       }
 
       return function(...args) {

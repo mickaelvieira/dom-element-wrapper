@@ -60,7 +60,19 @@ function list_example() {
   container.appendChild(element);
 }
 
+function prepend_example() {
+  const element1 = wrap("div");
+  const element2 = wrap("h1").appendText("h1");
+  const element3 = wrap("h2").appendText("h2");
+
+  element1.prepend(element2, element3);
+
+  const container = document.querySelector(".prepend-example");
+  container.appendChild(element1.unwrap());
+}
+
 window.addEventListener("DOMContentLoaded", function() {
   form_example();
   list_example();
+  prepend_example();
 });
