@@ -109,62 +109,6 @@ export default function(nameOrNode, props) {
   const element = applyProperties(node, props);
 
   /**
-   * Prepends a node to the element
-   *
-   * @param {String} name
-   * @param {Object} props
-   */
-  element.prependNode = function(name, props) {
-    prependChild(this, applyProperties(document.createElement(name), props));
-  };
-
-  /**
-   * Appends a node to the element
-   *
-   * @param {String} name
-   * @param {Object} props
-   */
-  element.appendNode = function(name, props) {
-    this.appendChild(applyProperties(document.createElement(name), props));
-  };
-
-  /**
-   * Prepends a child text node to the element
-   *
-   * @param {String} text
-   */
-  element.prependText = function(text) {
-    prependChild(this, document.createTextNode(text));
-  };
-
-  /**
-   * Appends a child text node to the element
-   *
-   * @param {String} text
-   */
-  element.appendText = function(text) {
-    this.appendChild(document.createTextNode(text));
-  };
-
-  /**
-   * Prepends a list of wrappers to the element
-   *
-   * @param {Proxy} wrappers
-   */
-  element.prependWrappers = function(...wrappers) {
-    wrappers.forEach(wrapper => prependChild(this, wrapper.unwrap()));
-  };
-
-  /**
-   * Appends a list of wrappers to the element
-   *
-   * @param {Proxy} wrappers
-   */
-  element.appendWrappers = function(...wrappers) {
-    wrappers.forEach(wrapper => this.appendChild(wrapper.unwrap()));
-  };
-
-  /**
    * Revokes the proxy and restore the underlying node and return it
    *
    * @returns {Node}
