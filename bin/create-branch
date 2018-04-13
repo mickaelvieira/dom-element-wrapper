@@ -65,17 +65,20 @@ split_version() {
 }
 
 get_next_major_version() {
-    local numbers=("$(split_version "$1")")
+    local numbers=()
+    IFS=" " read -r -a numbers <<< "$(split_version "$1")"
     [[ ${#numbers[@]} -eq 3 ]] && echo "$((numbers[0] + 1)).0.0"
 }
 
 get_next_minor_version() {
-    local numbers=("$(split_version "$1")")
+    local numbers=()
+    IFS=" " read -r -a numbers <<< "$(split_version "$1")"
     [[ ${#numbers[@]} -eq 3 ]] && echo "${numbers[0]}.$((numbers[1] + 1)).0"
 }
 
 get_next_patch_version() {
-    local numbers=("$(split_version "$1")")
+    local numbers=()
+    IFS=" " read -r -a numbers <<< "$(split_version "$1")"
     [[ ${#numbers[@]} -eq 3 ]] && echo "${numbers[0]}.${numbers[1]}.$((numbers[2] + 1))"
 }
 

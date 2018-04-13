@@ -1,10 +1,25 @@
 import whiteList from "./whiteList";
 
 const attributes = ["class", "tabindex"];
-
 const isData = name => name.startsWith("data");
 const isAria = name => name.startsWith("aria") || name === "role";
 const isAttribute = name => attributes.includes(name);
+const isFunction = fn => typeof fn !== "function";
+const isTrapped = name => Reflect.ownKeys(traps).includes(name);
+
+const traps = Object.freeze({
+  prepend: function(...children) {
+    children.forEach(child =>
+      this.prepend(typeof child.unwrap === "function" ? child.unwrap() : child)
+    );
+  },
+
+  append: function(...children) {
+    children.forEach(child =>
+      this.append(typeof child.unwrap === "function" ? child.unwrap() : child)
+    );
+  }
+});
 
 /**
  * @param {Object} object
@@ -12,8 +27,8 @@ const isAttribute = name => attributes.includes(name);
  *
  * @returns {Object}
  */
-function applyProperties(object, props = {}) {
-  Object.keys(props).forEach(prop => {
+const applyProperties = (object, props = {}) => {
+  Reflect.ownKeys(props).forEach(prop => {
     if (isAria(prop) || isData(prop) || isAttribute(prop)) {
       object.setAttribute(prop, props[prop]);
     } else {
@@ -21,7 +36,7 @@ function applyProperties(object, props = {}) {
     }
   });
   return object;
-}
+};
 
 /**
  * Restore the node as it was before wrapping
@@ -31,12 +46,12 @@ function applyProperties(object, props = {}) {
  *
  * @returns {Node}
  */
-function restore(node, privKeys) {
-  Object.keys(node)
+const restore = (node, privKeys) => {
+  Reflect.ownKeys(node)
     .filter(prop => privKeys.includes(prop))
     .forEach(key => delete node[key]);
   return node;
-}
+};
 
 /**
  * Do not hijack methods with name matching these rules
@@ -45,9 +60,8 @@ function restore(node, privKeys) {
  *
  * @returns {Boolean}
  */
-function doesMethodReturnRelevantValue(name) {
-  return /^(get|has|is)/.test(name) || whiteList.includes(name);
-}
+const doesMethodReturnRelevantValue = name =>
+  /^(get|has|is)/.test(name) || whiteList.includes(name);
 
 /**
  * @param {Array} subject
@@ -55,33 +69,8 @@ function doesMethodReturnRelevantValue(name) {
  *
  * @returns {Array}
  */
-function excludeValues(subject, excluded) {
-  return subject.filter(value => !excluded.includes(value));
-}
-
-/**
- * @param {Node} target
- * @param {Node} child
- */
-function prependChild(target, child) {
-  if (!target.firstChild) {
-    target.appendChild(child);
-  } else {
-    target.insertBefore(child, target.firstChild);
-  }
-}
-
-function prepend(...children) {
-  children.forEach(child =>
-    this.prepend(typeof child.unwrap === "function" ? child.unwrap() : child)
-  );
-}
-
-function append(...children) {
-  children.forEach(child =>
-    this.append(typeof child.unwrap === "function" ? child.unwrap() : child)
-  );
-}
+const excludeValues = (subject, excluded) =>
+  subject.filter(value => !excluded.includes(value));
 
 /**
  * Creates and wraps a node in order to chain its methods
@@ -100,68 +89,12 @@ export default function(nameOrNode, props) {
   /**
    * Caches object enumerable properties
    */
-  const ownKeys = Object.keys(node);
+  const ownKeys = Reflect.ownKeys(node);
 
   /**
    * Applies properties
    */
   const element = applyProperties(node, props);
-
-  /**
-   * Prepends a node to the element
-   *
-   * @param {String} name
-   * @param {Object} props
-   */
-  element.prependNode = function(name, props) {
-    prependChild(this, applyProperties(document.createElement(name), props));
-  };
-
-  /**
-   * Appends a node to the element
-   *
-   * @param {String} name
-   * @param {Object} props
-   */
-  element.appendNode = function(name, props) {
-    this.appendChild(applyProperties(document.createElement(name), props));
-  };
-
-  /**
-   * Prepends a child text node to the element
-   *
-   * @param {String} text
-   */
-  element.prependText = function(text) {
-    prependChild(this, document.createTextNode(text));
-  };
-
-  /**
-   * Appends a child text node to the element
-   *
-   * @param {String} text
-   */
-  element.appendText = function(text) {
-    this.appendChild(document.createTextNode(text));
-  };
-
-  /**
-   * Prepends a list of wrappers to the element
-   *
-   * @param {Proxy} wrappers
-   */
-  element.prependWrappers = function(...wrappers) {
-    wrappers.forEach(wrapper => prependChild(this, wrapper.unwrap()));
-  };
-
-  /**
-   * Appends a list of wrappers to the element
-   *
-   * @param {Proxy} wrappers
-   */
-  element.appendWrappers = function(...wrappers) {
-    wrappers.forEach(wrapper => this.appendChild(wrapper.unwrap()));
-  };
 
   /**
    * Revokes the proxy and restore the underlying node and return it
@@ -176,43 +109,36 @@ export default function(nameOrNode, props) {
   /**
    * Retrieves lib only properties
    */
-  const privKeys = excludeValues(Object.keys(node), ownKeys);
+  const privKeys = excludeValues(Reflect.ownKeys(node), ownKeys);
 
   /**
    * Creates the proxy
    */
   const { proxy, revoke } = Proxy.revocable(element, {
     get: function(target, name, receiver) {
-      if (!(name in target)) {
+      if (!Reflect.has(target, name)) {
         throw new Error(`Invalid method or property name "${name}"`);
       }
 
-      if (typeof target[name] !== "function") {
-        return target[name];
+      if (isFunction(target[name])) {
+        return Reflect.get(target, name);
       }
 
-      if (name === "prepend") {
+      if (isTrapped(name)) {
         return function(...args) {
-          prepend.call(target, ...args);
-          return receiver;
-        };
-      }
-
-      if (name === "append") {
-        return function(...args) {
-          append.call(target, ...args);
+          traps[name].call(target, ...args);
           return receiver;
         };
       }
 
       return function(...args) {
-        const result = target[name](...args);
+        const result = Reflect.apply(target[name], target, args);
         return doesMethodReturnRelevantValue(name) ? result : receiver;
       };
     },
 
     ownKeys: function(target) {
-      return excludeValues(Object.keys(target), privKeys);
+      return excludeValues(Reflect.ownKeys(target), privKeys);
     }
   });
 

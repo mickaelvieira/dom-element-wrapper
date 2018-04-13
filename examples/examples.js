@@ -12,26 +12,32 @@ function form_example() {
     .addEventListener("submit", function(event) {
       event.preventDefault();
     })
-    .appendWrappers(
-      wrap("div", { className: "form-group" }).appendNode("input", {
-        type: "text",
-        id: "username",
-        name: "username",
-        className: "form-control"
-      }),
-      wrap("div", { className: "form-group" }).appendNode("input", {
-        type: "text",
-        id: "password",
-        name: "password",
-        className: "form-control"
-      }),
-      wrap("div", { className: "form-group" }).appendNode("input", {
-        type: "submit",
-        id: "username",
-        name: "username",
-        className: "btn btn-secondary",
-        value: "Click me"
-      })
+    .append(
+      wrap("div", { className: "form-group" }).append(
+        wrap("input", {
+          type: "text",
+          id: "username",
+          name: "username",
+          className: "form-control"
+        })
+      ),
+      wrap("div", { className: "form-group" }).append(
+        wrap("input", {
+          type: "text",
+          id: "password",
+          name: "password",
+          className: "form-control"
+        })
+      ),
+      wrap("div", { className: "form-group" }).append(
+        wrap("input", {
+          type: "submit",
+          id: "username",
+          name: "username",
+          className: "btn btn-secondary",
+          value: "Click me"
+        })
+      )
     )
     .unwrap();
 
@@ -41,18 +47,18 @@ function form_example() {
 
 function list_example() {
   const items = ["Cat", "Dog", "Wolf"].map((name, index) =>
-    wrap("li", { "data-id": index }).appendText(name)
+    wrap("li", { "data-id": index }).append(name)
   );
 
   const element = wrap("div")
     .setAttribute("id", "element-id")
-    .appendWrappers(
-      wrap("div").appendWrappers(wrap("h2").appendText("Animals")),
+    .append(
+      wrap("div").append(wrap("h2").append("Animals")),
       wrap("ul", {
         role: "menu",
         "aria-menu": true,
         class: "menu-items"
-      }).appendWrappers(...items)
+      }).append(...items)
     )
     .unwrap();
 
@@ -62,8 +68,8 @@ function list_example() {
 
 function prepend_example() {
   const element1 = wrap("div");
-  const element2 = wrap("h1").appendText("h1");
-  const element3 = wrap("h2").appendText("h2");
+  const element2 = wrap("h1").append("h1");
+  const element3 = wrap("h2").append("h2");
 
   element1.prepend(element2, element3);
 

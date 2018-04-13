@@ -50,11 +50,12 @@ import { wrap } from "dom-element-wrapper";
 
 let element = document.querySelector(".my-container");
 
-element = wrap(element)
-  .appendNode("div", {
+element = wrap(element).append(
+  wrap("div", {
     id: "element-id",
     className: "css-class"
-  });
+  })
+);
 ```
 
 The cool thing is you still have access to the underlying node, so you can do something like this:
@@ -63,19 +64,20 @@ The cool thing is you still have access to the underlying node, so you can do so
 import { wrap } from "dom-element-wrapper";
 
 const nodes = wrap(element)
-  .appendNode("div", {
-    id: "element-id",
-    className: "css-class"
-  })
+  .append(
+    wrap("div", {
+      id: "element-id",
+      className: "css-class"
+    })
+  )
   .setAttribute("title", "Element's title")
   .addEventListener("mouseover", handler)
-  .appendChild(document.createElement("div"))
-  .childNodes;
+  .appendChild(document.createElement("div")).childNodes;
 ```
 
 We are now able to chain the node's methods! Whoop Whoop!
 
-You still have access to the element's properties, the only difference is: the proxy intercept "setters"  methods that return a _relevant_ result cannot be chained (.i.e such as `querySelector`, `cloneNode`, etc...) as so for methods starting with `get` `has` or `is` however methods that returns _irrelevant_ results can be chained (.i.e such as `addEventListener`, `insertBefore`, `appendChild`, etc...).
+You still have access to the element's properties, the only difference is: the proxy intercept "setters" methods that return a _relevant_ result cannot be chained (.i.e such as `querySelector`, `cloneNode`, etc...) as so for methods starting with `get` `has` or `is` however methods that returns _irrelevant_ results can be chained (.i.e such as `addEventListener`, `insertBefore`, `appendChild`, etc...).
 
 > **What do I call `irrelevant` results?**
 >
@@ -119,16 +121,12 @@ you can simply write something like that:
 import { wrap } from "dom-element-wrapper";
 
 const entries = ["Stuff 1", "Stuff 2", "Stuff 3", "Stuff 4"];
-const items = entries.map(entry => wrap("li").appendText(entry));
+const items = entries.map(entry => wrap("li").append(entry));
 
 const element = wrap("div", { className: "nice-stuff" })
-  .appendWrappers(
-    wrap("div").appendWrappers(
-      wrap("p").appendText("List of stuff")
-    ),
-    wrap("ul").appendWrappers(
-      ...items
-    )
+  .append(
+    wrap("div").append(wrap("p").append("List of stuff")),
+    wrap("ul").append(...items)
   )
   .unwrap();
 
@@ -187,12 +185,16 @@ const element = wrap(document.querySelector(".container"), {
 
 ```js
 const element = wrap("div")
-  .prependNode("div", {
-    id: "my-id",
-  })
-  .prependNode("div", {
-    className: "my-style"
-  });
+  .prepend(
+    wrap("div", {
+      id: "my-id"
+    })
+  )
+  .prepend(
+    wrap("div", {
+      className: "my-style"
+    })
+  );
 ```
 
 ```html
@@ -204,12 +206,16 @@ const element = wrap("div")
 
 ```js
 const element = wrap("div")
-  .appendNode("div", {
-    id: "my-id",
-  })
-  .appendNode("div", {
-    className: "my-style"
-  });
+  .append(
+    wrap("div", {
+      id: "my-id"
+    })
+  )
+  .append(
+    wrap("div", {
+      className: "my-style"
+    })
+  );
 ```
 
 ```html
@@ -223,9 +229,9 @@ const element = wrap("div")
 
 ```js
 const element = wrap("div")
-  .prependText("world")
-  .prependText(" ")
-  .prependText("Hello");
+  .prepend("world")
+  .prepend(" ")
+  .prepend("Hello");
 ```
 
 ```html
@@ -236,9 +242,9 @@ const element = wrap("div")
 
 ```js
 const element = wrap("div")
-  .appendText("Hello")
-  .appendText(" ")
-  .appendText("world");
+  .append("Hello")
+  .append(" ")
+  .append("world");
 ```
 
 ```html
@@ -250,11 +256,7 @@ const element = wrap("div")
 #### Prepend/append wrappers
 
 ```js
-const element = wrap("div").prependWrappers(
-  wrap("h1"),
-  wrap("h2"),
-  wrap("p")
-);
+const element = wrap("div").prepend(wrap("h1"), wrap("h2"), wrap("p"));
 ```
 
 ```html
@@ -266,11 +268,7 @@ const element = wrap("div").prependWrappers(
 ```
 
 ```js
-const element = wrap("div").appendWrappers(
-  wrap("h1"),
-  wrap("h2"),
-  wrap("p")
-);
+const element = wrap("div").append(wrap("h1"), wrap("h2"), wrap("p"));
 ```
 
 ```html

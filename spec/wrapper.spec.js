@@ -111,6 +111,7 @@ describe("wrap", () => {
       const element = wrap("div")
         .prepend(document.createElement("p"))
         .prepend(document.createElement("h1"));
+
       expect(element.firstChild.nodeType).toBe(Node.ELEMENT_NODE);
       expect(element.lastChild.nodeType).toBe(Node.ELEMENT_NODE);
       expect(element.firstChild.nodeName.toLowerCase()).toBe("h1");
@@ -150,10 +151,15 @@ describe("wrap", () => {
       expect(element.innerHTML).toBe("hello world");
     });
 
-    test("appends a node", () => {
-      const element = wrap("div").append(document.createElement("p"));
+    test("appends nodes", () => {
+      const element = wrap("div")
+        .append(document.createElement("p"))
+        .append(document.createElement("h1"));
+
       expect(element.firstChild.nodeType).toBe(Node.ELEMENT_NODE);
+      expect(element.lastChild.nodeType).toBe(Node.ELEMENT_NODE);
       expect(element.firstChild.nodeName.toLowerCase()).toBe("p");
+      expect(element.lastChild.nodeName.toLowerCase()).toBe("h1");
     });
   });
 
@@ -165,10 +171,10 @@ describe("wrap", () => {
         .appendChild(document.createElement("p"))
         .appendChild(document.createElement("p"))
         .addEventListener("mouseover", function() {})
-        .appendWrappers(
-          wrap("ul").appendWrappers(
-            wrap("li").appendText("item 1"),
-            wrap("li").appendText("item 2")
+        .append(
+          wrap("ul").prepend(
+            wrap("li").append("item 1"),
+            wrap("li").append("item 2")
           )
         );
 
@@ -211,9 +217,11 @@ describe("wrap", () => {
     });
 
     test("should not intercept whitelisted methods", () => {
-      const wrapper = wrap("div").appendNode("p", {
-        className: "my-class"
-      });
+      const wrapper = wrap("div").append(
+        wrap("p", {
+          className: "my-class"
+        })
+      );
 
       expect(
         wrapper.compareDocumentPosition(document.createElement("p"))
@@ -265,122 +273,6 @@ describe("wrap", () => {
       wrapper.custom3 = "value";
 
       expect(Object.keys(wrapper)).toEqual(["custom1", "custom2", "custom3"]);
-    });
-  });
-
-  describe("deprecated prepend functions", () => {
-    test("prepends text nodes", () => {
-      const element = wrap("div")
-        .prependText("world")
-        .prependText(" ")
-        .prependText("hello");
-
-      expect(element.firstChild.nodeType).toBe(Node.TEXT_NODE);
-      expect(element.lastChild.nodeType).toBe(Node.TEXT_NODE);
-      expect(element.innerHTML).toBe("hello world");
-    });
-
-    test("prepends nodes", () => {
-      const element = wrap("div")
-        .prependNode("p")
-        .prependNode("h1");
-      expect(element.firstChild.nodeType).toBe(Node.ELEMENT_NODE);
-      expect(element.lastChild.nodeType).toBe(Node.ELEMENT_NODE);
-      expect(element.firstChild.nodeName.toLowerCase()).toBe("h1");
-      expect(element.lastChild.nodeName.toLowerCase()).toBe("p");
-    });
-
-    test("prepends nodes with properties", () => {
-      const element = wrap("div")
-        .prependNode("p", {
-          className: "class-p"
-        })
-        .prependNode("h1", {
-          className: "class-h1"
-        });
-
-      expect(element.firstChild.nodeType).toBe(Node.ELEMENT_NODE);
-      expect(element.firstChild.nodeName.toLowerCase()).toBe("h1");
-      expect(element.firstChild.className).toBe("class-h1");
-
-      expect(element.lastChild.nodeType).toBe(Node.ELEMENT_NODE);
-      expect(element.lastChild.nodeName.toLowerCase()).toBe("p");
-      expect(element.lastChild.className).toBe("class-p");
-    });
-
-    test("prepends a wrapper", () => {
-      const element1 = wrap("div");
-      const element2 = wrap("h1");
-
-      element1.prependWrappers(element2);
-
-      expect(element1.firstChild.nodeType).toBe(Node.ELEMENT_NODE);
-      expect(element1.firstChild.nodeName.toLowerCase()).toBe("h1");
-
-      expect(element1.lastChild.nodeType).toBe(Node.ELEMENT_NODE);
-      expect(element1.lastChild.nodeName.toLowerCase()).toBe("h1");
-    });
-
-    test("prepends multiple wrappers", () => {
-      const element1 = wrap("div");
-      const element2 = wrap("h1");
-      const element3 = wrap("h2");
-
-      element1.prependWrappers(element3, element2);
-
-      expect(element1.firstChild.nodeType).toBe(Node.ELEMENT_NODE);
-      expect(element1.firstChild.nodeName.toLowerCase()).toBe("h1");
-
-      expect(element1.lastChild.nodeType).toBe(Node.ELEMENT_NODE);
-      expect(element1.lastChild.nodeName.toLowerCase()).toBe("h2");
-    });
-  });
-
-  describe("deprecated append functions", () => {
-    test("appends text nodes", () => {
-      const element = wrap("div")
-        .appendText("hello")
-        .appendText(" ")
-        .appendText("world");
-
-      expect(element.firstChild.nodeType).toBe(Node.TEXT_NODE);
-      expect(element.innerHTML).toBe("hello world");
-    });
-
-    test("appends a node", () => {
-      const element = wrap("div").appendNode("p");
-      expect(element.firstChild.nodeType).toBe(Node.ELEMENT_NODE);
-      expect(element.firstChild.nodeName.toLowerCase()).toBe("p");
-    });
-
-    test("appends a node with properties", () => {
-      const element = wrap("div").appendNode("p", {
-        className: "my-css-class"
-      });
-      expect(element.firstChild.nodeType).toBe(Node.ELEMENT_NODE);
-      expect(element.firstChild.nodeName.toLowerCase()).toBe("p");
-      expect(element.firstChild.className).toBe("my-css-class");
-    });
-
-    test("appends a wrapper", () => {
-      const element1 = wrap("div");
-      const element2 = wrap("p");
-
-      element1.appendWrappers(element2);
-
-      expect(element1.firstChild.nodeType).toBe(Node.ELEMENT_NODE);
-      expect(element1.firstChild.nodeName.toLowerCase()).toBe("p");
-    });
-
-    test("appends multiple wrappers", () => {
-      const element1 = wrap("div");
-      const element2 = wrap("p");
-      const element3 = wrap("span");
-
-      element1.appendWrappers(element2, element3);
-
-      expect(element1.firstChild.nodeName.toLowerCase()).toBe("p");
-      expect(element1.lastChild.nodeName.toLowerCase()).toBe("span");
     });
   });
 
