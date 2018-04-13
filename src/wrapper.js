@@ -73,18 +73,6 @@ const excludeValues = (subject, excluded) =>
   subject.filter(value => !excluded.includes(value));
 
 /**
- * @param {Node} target
- * @param {Node} child
- */
-function prependChild(target, child) {
-  if (!target.firstChild) {
-    target.appendChild(child);
-  } else {
-    target.insertBefore(child, target.firstChild);
-  }
-}
-
-/**
  * Creates and wraps a node in order to chain its methods
  *
  * @param {String|Node} nameOrNode
