@@ -1,7 +1,7 @@
 {
   "name": "dom-element-wrapper",
   "description": "Make the DOM great again!",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "main": "dist/dom-element-wrapper.js",
   "js:next": "dist/dom-element-wrapper-es.js",
   "module": "dist/dom-element-wrapper-es.js",

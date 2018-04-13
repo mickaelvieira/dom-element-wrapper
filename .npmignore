@@ -4,6 +4,7 @@ coverage
 examples
 node_modules
 spec
+.idea
 .babelrc
 .eslintignore
 .eslintrc
