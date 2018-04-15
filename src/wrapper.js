@@ -4,7 +4,7 @@ const attributes = ["class", "tabindex"];
 const isData = name => name.startsWith("data");
 const isAria = name => name.startsWith("aria") || name === "role";
 const isAttribute = name => attributes.includes(name);
-const isFunction = fn => typeof fn !== "function";
+const isFunction = fn => typeof fn === "function";
 const isTrapped = name => Reflect.ownKeys(traps).includes(name);
 
 const traps = Object.freeze({
@@ -120,7 +120,7 @@ export default function(nameOrNode, props) {
         throw new Error(`Invalid method or property name "${name}"`);
       }
 
-      if (isFunction(target[name])) {
+      if (!isFunction(target[name])) {
         return Reflect.get(target, name);
       }
 
